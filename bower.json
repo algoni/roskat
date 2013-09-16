@@ -1,0 +1,13 @@
+{
+  "name": "roskakori",
+  "version": "0.0.0",
+  "dependencies": {
+    "sass-bootstrap": "~3.0.0",
+    "requirejs": "~2.1.8",
+    "jquery": "~1.10.2",
+    "backbone-amd": "~1.0.0",
+    "underscore": "~1.5.2",
+    "requirejs-plugins": "~1.0.2"
+  },
+  "devDependencies": {}
+}
