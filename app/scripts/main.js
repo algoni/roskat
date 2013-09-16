@@ -20,7 +20,12 @@ require.config({
         /* RequireJS plugins */
         googleMaps: '../bower_components/requirejs-plugins/src/goog',
         async: '../bower_components/requirejs-plugins/src/async',
-        propertyParser: '../bower_components/requirejs-plugins/src/propertyParser'
+        propertyParser: '../bower_components/requirejs-plugins/src/propertyParser',
+        json: '../bower_components/requirejs-plugins/src/json',
+        text: '../bower_components/requirejs-text/text',
+
+        /* Roskakorit-kanta */
+        trash: 'http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=tampere_iris:WFS_ROSKIS&outputFormat=application/json&srsName=EPSG:4326'
 
     },
     shim: {
