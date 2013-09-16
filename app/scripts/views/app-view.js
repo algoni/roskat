@@ -23,15 +23,13 @@ define([
 
             //
             var roskat = $.get('scripts/roskat.json', function() {
-                console.log(roskat.responseJSON);
-
                 for (var i = roskat.responseJSON.features.length - 1; i >= 0; i--)
                 {
                     // Luodaan karttamerkki
                     var lat = roskat.responseJSON.features[i].geometry.coordinates[1];
                     var lng = roskat.responseJSON.features[i].geometry.coordinates[0];
 
-                    var marker = new google.maps.Marker({
+                    new google.maps.Marker({
                         position: new google.maps.LatLng(lat, lng),
                         map: window.map
                     });
