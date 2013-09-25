@@ -46,7 +46,8 @@ module.exports = function (grunt) {
                     '<%= yeoman.app %>/*.html',
                     '.tmp/styles/{,*/}*.css',
                     '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+                    '<%= yeoman.app %>/scripts/template/*.hbs'
                 ]
             }
         },
@@ -55,11 +56,11 @@ module.exports = function (grunt) {
                 port: 9000,
                 livereload: 35729,
                 // change this to '0.0.0.0' to access the server from outside
-                hostname: 'localhost'
+                hostname: '0.0.0.0'
             },
             livereload: {
                 options: {
-                    open: true,
+                    open: false,
                     base: [
                         '.tmp',
                         yeomanConfig.app
@@ -292,7 +293,8 @@ module.exports = function (grunt) {
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/{,*/}*.*',
                         'bower_components/sass-bootstrap/fonts/*.*',
-                        'scripts/roskat.json'
+                        'scripts/roskat.json',
+                        'config.xml'
                     ]
                 }]
             },

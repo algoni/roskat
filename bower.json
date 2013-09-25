@@ -8,7 +8,9 @@
     "backbone-amd": "~1.0.0",
     "underscore": "~1.5.2",
     "requirejs-plugins": "~1.0.2",
-    "requirejs-text": "~2.0.10"
+    "requirejs-text": "~2.0.10",
+    "require-handlebars-plugin": "~0.4.0",
+    "handlebars": "~1.0.0"
   },
   "devDependencies": {}
 }
