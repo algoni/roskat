@@ -38,16 +38,19 @@ define([
                 typeName: 'tampere_iris:WFS_ROSKIS',
                 outputFormat: 'application/json',
                 srsName: 'EPSG:4326',
-                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326'
+                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä (täytyy määrätä erikseen)
             }).done(function(data){
+                window.App.trashcans = [];
                 for (var i = data.features.length - 1; i >= 0; i--) {
-                    new google.maps.Marker({
+                    var trashcan = new google.maps.Marker({
                         position: new google.maps.LatLng(
                             data.features[i].geometry.coordinates[1],
                             data.features[i].geometry.coordinates[0]
                         ),
                         map: window.map
                     });
+                    // Lisätään roskakori taulukkoon
+                    window.App.trashcans.push(trashcan);
                 }
             });
         },
@@ -59,7 +62,7 @@ define([
             ];
 
             // Koordinaatit väärinpäin stringinä, koska WFS
-            // muotoa y1,x1,y2,x2
+            // bbox on muotoa y1,x1,y2,x2
             return bbox[1][1] + ',' + bbox[1][0] + ',' + bbox[0][1] + ',' + bbox[0][0];
         },
 
@@ -67,7 +70,7 @@ define([
             window.map = new google.maps.Map(this.el, this.mapOptions);
 
             // Käyttäjä kartalle
-            var userMarker = new google.maps.Marker({
+            new google.maps.Marker({
                 position: this.userPosition,
                 map: window.map,
                 icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
