@@ -29,54 +29,56 @@ define([
         handleLocationQuery: function(position) {
             var userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-            // Haetaan käyttäjän lähellä olevat pisteet
-            var bbox = this.calculateBoundingBox(userPosition, 10000);
-
-            for (var i = bbox.length - 1; i >= 0; i--) {
-                new google.maps.Marker({
-                    position: bbox[i],
-                    map: window.map,
-                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-                });
-            }
-
-
             // Käyttäjä kartalle
-            new google.maps.Marker({
+            var userMarker = new google.maps.Marker({
                 position: userPosition,
                 map: window.map,
                 icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
             });
 
+            // Keskitetään kartta käyttäjään
+            window.map.panTo(userMarker.getPosition());
+
+            // Haetaan roskakorit bounding boxin mukaan
+            this.drawNearestTrashcans(userPosition, Config.bboxRadius);
+        },
+
+        drawNearestTrashcans: function(position, range) {
+            $.get('http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows',
+            {
+                service: 'WFS',
+                version: '2.0.0',
+                request: 'GetFeature',
+                typeName: 'tampere_iris:WFS_ROSKIS',
+                outputFormat: 'application/json',
+                srsName: 'EPSG:4326',
+                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326'
+            }).done(function(data){
+                for (var i = data.features.length - 1; i >= 0; i--) {
+                    new google.maps.Marker({
+                        position: new google.maps.LatLng(
+                            data.features[i].geometry.coordinates[1],
+                            data.features[i].geometry.coordinates[0]
+                        ),
+                        map: window.map
+                    });
+                }
+            });
         },
 
         calculateBoundingBox: function(position, distance) {
-            var bbox = [];
+            var bbox = [
+                position.getCoordWithDistanceAndAngle(distance, 45),
+                position.getCoordWithDistanceAndAngle(distance, 225)
+            ];
 
-            bbox[0] = position.getCoordWithDistanceAndAngle(distance, 45);
-            bbox[1] = position.getCoordWithDistanceAndAngle(distance, 135);
-            bbox[2] = position.getCoordWithDistanceAndAngle(distance, 225);
-            bbox[3] = position.getCoordWithDistanceAndAngle(distance, 315);
-
-            return bbox;
+            // Koordinaatit väärinpäin stringinä, koska WFS
+            // muotoa y1,x1,y2,x2
+            return bbox[1][1] + ',' + bbox[1][0] + ',' + bbox[0][1] + ',' + bbox[0][0];
         },
 
         render: function() {
             window.map = new google.maps.Map(document.getElementById('map-canvas'), this.mapOptions);
-
-            var roskat = $.get('http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=tampere_iris:WFS_ROSKIS&outputFormat=application/json&srsName=EPSG:4326', function() {
-                for (var i = roskat.responseJSON.features.length - 1; i >= 0; i--)
-                {
-                    // Luodaan karttamerkki
-                    var lat = roskat.responseJSON.features[i].geometry.coordinates[1];
-                    var lng = roskat.responseJSON.features[i].geometry.coordinates[0];
-
-                    new google.maps.Marker({
-                        position: new google.maps.LatLng(lat, lng),
-                        map: window.map
-                    });
-                }
-            },'json');
         }
     });
 

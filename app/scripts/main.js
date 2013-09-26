@@ -116,7 +116,7 @@ require(['backbone', 'views/app-view', 'config'], function (Backbone, AppView, C
                    Math.cos(distance) - Math.sin(lat1) * Math.sin(lat2));
 
         lon2 = (lon2+3*Math.PI) % (2*Math.PI) - Math.PI;  // Normalisoidaan välille -180º..+180º
-        return new google.maps.LatLng(lat2.toDeg(), lon2.toDeg());
+        return [lat2.toDeg(), lon2.toDeg()];
     };
 
     window.App = {

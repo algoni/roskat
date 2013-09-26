@@ -11,7 +11,7 @@ define([], function() {
 
         defaultZoom: 12,
 
-        boundingBoxRadius: 100 // metriä
+        bboxRadius: 15000 // metriä
     };
 
     return Config;
