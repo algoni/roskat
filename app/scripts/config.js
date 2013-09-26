@@ -9,9 +9,9 @@ define([], function() {
             lng: 23.763058
         },
 
-        defaultZoom: 12,
+        defaultZoom: 15,
 
-        bboxRadius: 15000 // metriä
+        bboxRadius: 500 // metriä
     };
 
     return Config;

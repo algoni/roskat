@@ -27,7 +27,8 @@ define([
         },
 
         handleLocationQuery: function(position) {
-            var userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            // var userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var userPosition = new google.maps.LatLng(61.44724,23.849595);
 
             // Käyttäjä kartalle
             var userMarker = new google.maps.Marker({
