@@ -120,9 +120,9 @@ require(['backbone', 'views/app-view', 'config'], function (Backbone, AppView, C
     };
 
     window.App = {
-        config: Config
+        config: Config,
+        userPosition: null
     };
 
-    var appView = new AppView();
-    appView.render();
+    new AppView();
 });

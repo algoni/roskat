@@ -11,37 +11,22 @@ define([
         id: 'map-canvas',
 
         initialize: function() {
-            // Kartan asetukset, keskitetään Tampereen keskustaan
+            // Käyttäjän sijainti Google-koordinaatteina
+            this.userPosition = new google.maps.LatLng(
+                window.App.userPosition.lat,
+                window.App.userPosition.lng
+            );
+
+            // Kartan asetukset, keskitetään käyttäjään
             this.mapOptions = {
-                center: new google.maps.LatLng(
-                    Config.mapCenter.lat,
-                    Config.mapCenter.lng
-                ),
+                center: this.userPosition,
                 zoom: Config.defaultZoom,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 disableDefaultUI: true
             };
 
-            // Kysytään käyttäjältä sijaintia
-            navigator.geolocation.getCurrentPosition(this.handleLocationQuery.bind(this));
-        },
-
-        handleLocationQuery: function(position) {
-            // var userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            var userPosition = new google.maps.LatLng(61.44724,23.849595);
-
-            // Käyttäjä kartalle
-            var userMarker = new google.maps.Marker({
-                position: userPosition,
-                map: window.map,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-            });
-
-            // Keskitetään kartta käyttäjään
-            window.map.panTo(userMarker.getPosition());
-
             // Haetaan roskakorit bounding boxin mukaan
-            this.drawNearestTrashcans(userPosition, Config.bboxRadius);
+            this.drawNearestTrashcans(this.userPosition, Config.bboxRadius);
         },
 
         drawNearestTrashcans: function(position, range) {
@@ -80,6 +65,13 @@ define([
 
         render: function() {
             window.map = new google.maps.Map(this.el, this.mapOptions);
+
+            // Käyttäjä kartalle
+            var userMarker = new google.maps.Marker({
+                position: this.userPosition,
+                map: window.map,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+            });
 
             return this;
         }
