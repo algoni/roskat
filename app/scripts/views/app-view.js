@@ -29,17 +29,18 @@ define([
 
         saveUserLocation: function(position) {
             window.App.userPosition = {
-                // lat: position.coords.latitude,
-                // lng: position.coords.longitude
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
                 // debug: käyttäjä Hervannan keskustaan
-                lat: 61.44724,
-                lng: 23.849595
+                // lat: 61.44724,
+                // lng: 23.849595
             };
             this.render();
         },
 
         render: function() {
             var mapView = new MapView();
+            console.log(mapView);
             this.el.appendChild(mapView.render().el);
             return this;
         }

@@ -2,8 +2,11 @@
 define([
     'backbone',
     'config',
+    'models/trashcan',
+    'views/trashcan-view',
+    'collections/trashcans-collection',
     'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyDbfKJsRw2KfCzcokEtcypyR2wWYAiZREE&sensor=false'
-], function(Backbone, Config) {
+], function(Backbone, Config, Trashcan, TrashcanView, TrashcansCollection) {
     'use strict';
 
     var MapView = Backbone.View.extend({
@@ -40,19 +43,34 @@ define([
                 srsName: 'EPSG:4326',
                 bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä (täytyy määrätä erikseen)
             }).done(function(data){
-                window.App.trashcans = [];
+                this.trashcans = new TrashcansCollection();
                 for (var i = data.features.length - 1; i >= 0; i--) {
-                    var trashcan = new google.maps.Marker({
+
+                    // Luodaan uusi model
+                    var model = new Trashcan({
                         position: new google.maps.LatLng(
                             data.features[i].geometry.coordinates[1],
                             data.features[i].geometry.coordinates[0]
                         ),
-                        map: window.map
+                        lat: data.features[i].geometry.coordinates[1],
+                        lng: data.features[i].geometry.coordinates[0]
                     });
-                    // Lisätään roskakori taulukkoon
-                    window.App.trashcans.push(trashcan);
+
+                    // Lisätään joukkoon
+                    this.trashcans.add(model);
+
+                    // Piirretään näkymä
+                    new TrashcanView({
+                        model: model
+                    });
                 }
-            });
+
+                // Piirretään lähin roskis
+                new TrashcanView({
+                    model: this.trashcans.getClosest(this.userPosition)
+                }).render();
+
+            }.bind(this));
         },
 
         calculateBoundingBox: function(position, distance) {

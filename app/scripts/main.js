@@ -124,5 +124,6 @@ require(['backbone', 'views/app-view', 'config'], function (Backbone, AppView, C
         userPosition: null
     };
 
-    new AppView();
+    var app = new AppView();
+
 });

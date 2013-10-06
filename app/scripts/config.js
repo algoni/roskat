@@ -5,7 +5,7 @@ define([], function() {
 
     var Config = {
         defaultZoom: 15,
-        bboxRadius: 500 // metriä
+        bboxRadius: 4000 // metriä
     };
 
     return Config;
