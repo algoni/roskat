@@ -1,12 +1,11 @@
-/*global define,google*/
+/*global define*/
 define([
     'backbone',
     'config',
     'models/trashcan',
     'views/trashcan-view',
     'collections/trashcans-collection',
-    'leaflet',
-    'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyDbfKJsRw2KfCzcokEtcypyR2wWYAiZREE&sensor=false'
+    'leaflet'
 ], function(Backbone, Config, Trashcan, TrashcanView, TrashcansCollection, L) {
     'use strict';
 
@@ -16,10 +15,10 @@ define([
 
         initialize: function() {
             // Käyttäjän sijainti Google-koordinaatteina
-            this.userPosition = [
+            this.userPosition = new L.LatLng(
                 window.App.userPosition.lat,
                 window.App.userPosition.lng
-            ];
+            );
 
             // Kartan asetukset, keskitetään käyttäjään
             this.mapOptions = {
@@ -27,12 +26,11 @@ define([
                 zoom: Config.defaultZoom,
                 attributionControl: false,
                 zoomControl: false,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
                 disableDefaultUI: true
             };
 
             // Haetaan roskakorit bounding boxin mukaan
-            // this.drawNearestTrashcans(this.userPosition, Config.bboxRadius);
+            this.drawNearestTrashcans(this.userPosition, Config.bboxRadius);
         },
 
         drawNearestTrashcans: function(position, range) {
@@ -44,33 +42,26 @@ define([
                 typeName: 'tampere_iris:WFS_ROSKIS',
                 outputFormat: 'application/json',
                 srsName: 'EPSG:4326',
-                // bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä (täytyy määrätä erikseen)
+                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä (täytyy määrätä erikseen)
             }).done(function(data){
                 this.trashcans = new TrashcansCollection();
                 for (var i = data.features.length - 1; i >= 0; i--) {
 
                     // Luodaan uusi model
                     var model = new Trashcan({
-                        position: new google.maps.LatLng(
+                        position: new L.LatLng(
                             data.features[i].geometry.coordinates[1],
                             data.features[i].geometry.coordinates[0]
-                        ),
-                        lat: data.features[i].geometry.coordinates[1],
-                        lng: data.features[i].geometry.coordinates[0]
+                        )
                     });
 
                     // Lisätään joukkoon
                     this.trashcans.add(model);
-
-                    // Piirretään näkymä
-                    new TrashcanView({
-                        model: model
-                    });
                 }
 
                 // Piirretään lähin roskis
                 new TrashcanView({
-                    model: this.trashcans.getClosest(this.userPosition)
+                    model: this.trashcans.getClosest(window.App.userPosition)
                 }).render();
 
             }.bind(this));
@@ -87,6 +78,15 @@ define([
             return bbox[1][1] + ',' + bbox[1][0] + ',' + bbox[0][1] + ',' + bbox[0][0];
         },
 
+        drawUser: function() {
+            new L.Marker(this.userPosition, {
+                icon: new L.divIcon({
+                    className: 'user-marker',
+                    iconAnchor: new L.Point(5,5)
+                })
+            }).addTo(window.map);
+        },
+
         render: function() {
             return this;
         },
@@ -96,6 +96,8 @@ define([
             L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/110089/256/{z}/{x}/{y}.png', {
                 maxZoom: 18
             }).addTo(window.map);
+
+            this.drawUser();
         }
     });
 
