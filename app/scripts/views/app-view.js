@@ -40,8 +40,8 @@ define([
 
         render: function() {
             var mapView = new MapView();
-            console.log(mapView);
             this.el.appendChild(mapView.render().el);
+            mapView.drawMapCanvas();
             return this;
         }
 

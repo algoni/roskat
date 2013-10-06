@@ -33,7 +33,10 @@ require.config({
         hbs: '../bower_components/require-handlebars-plugin/hbs',
 
         /* Roskakorit-kanta */
-        trash: 'http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=tampere_iris:WFS_ROSKIS&outputFormat=application/json&srsName=EPSG:4326'
+        trash: 'http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=tampere_iris:WFS_ROSKIS&outputFormat=application/json&srsName=EPSG:4326',
+
+        /* Leaflet */
+        leaflet: '../bower_components/leaflet/dist/leaflet'
 
     },
     shim: {
@@ -73,6 +76,11 @@ require.config({
 
         underscore: {
             exports: '_'
+        },
+
+        leaflet: {
+            exports: 'L',
+            deps: []
         },
 
         handlebars: {
