@@ -4,6 +4,7 @@ define(['backbone', 'models/trashcan'], function(Backbone, Trashcan) {
     'use strict';
 
     var Trashcans = Backbone.Collection.extend({
+
         model: Trashcan,
 
         getClosest: function(position) {
@@ -13,8 +14,8 @@ define(['backbone', 'models/trashcan'], function(Backbone, Trashcan) {
             };
 
             for (var i = this.models.length - 1; i >= 0; i--) {
-                var a = Math.abs(this.models[i].get('lat') - position.lat());
-                var b = Math.abs(this.models[i].get('lng') - position.lng());
+                var a = Math.abs(this.models[i].get('position').lat - position.lat);
+                var b = Math.abs(this.models[i].get('position').lng- position.lng);
                 var distance = (a * a) + (b * b);
 
                 if (distance <= closest.distance) {
@@ -24,7 +25,7 @@ define(['backbone', 'models/trashcan'], function(Backbone, Trashcan) {
                     };
                 }
             }
-            console.log(closest);
+
             return closest.model;
         }
     });

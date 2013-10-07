@@ -1,16 +1,12 @@
-/*global define,google*/
-define(['backbone'], function(Backbone) {
+/*global define*/
+define(['backbone', 'leaflet'], function(Backbone, L) {
 
     'use strict';
 
     var TrashcanView = Backbone.View.extend({
 
         render: function(markerIcon) {
-            new google.maps.Marker({
-                position: this.model.get('position'),
-                map: window.map,
-                icon: markerIcon
-            });
+            new L.Marker(this.model.get('position')).addTo(window.map);
             return this;
         }
     });

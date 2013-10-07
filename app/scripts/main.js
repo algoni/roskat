@@ -33,7 +33,10 @@ require.config({
         hbs: '../bower_components/require-handlebars-plugin/hbs',
 
         /* Roskakorit-kanta */
-        trash: 'http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=tampere_iris:WFS_ROSKIS&outputFormat=application/json&srsName=EPSG:4326'
+        trash: 'http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=tampere_iris:WFS_ROSKIS&outputFormat=application/json&srsName=EPSG:4326',
+
+        /* Leaflet */
+        leaflet: '../bower_components/leaflet/dist/leaflet'
 
     },
     shim: {
@@ -75,6 +78,11 @@ require.config({
             exports: '_'
         },
 
+        leaflet: {
+            exports: 'L',
+            deps: []
+        },
+
         handlebars: {
             deps: [],
             exports: 'Handlebars'
@@ -86,7 +94,7 @@ require.config({
     }
 });
 
-require(['backbone', 'views/app-view', 'config'], function (Backbone, AppView, Config) {
+require(['backbone', 'views/app-view', 'config', 'leaflet'], function (Backbone, AppView, Config, L) {
     'use strict';
 
     if (typeof Number.prototype.toRad === 'undefined') {
@@ -101,21 +109,21 @@ require(['backbone', 'views/app-view', 'config'], function (Backbone, AppView, C
         };
     }
 
-    google.maps.LatLng.prototype.getCoordWithDistanceAndAngle = function(distance, bearing) {
+    L.LatLng.prototype.getCoordWithDistanceAndAngle = function(distance, bearing) {
         // http://www.movable-type.co.uk/scripts/latlong.html
 
         var R = 6378100; // Maan säde metreinä
 
         distance = distance / R;  // Etäisyys radiaaneina
         bearing = bearing.toRad();
-        var lat1 = this.lat().toRad(), lon1 = this.lng().toRad();
+        var lat1 = this.lat.toRad(), lon1 = this.lng.toRad();
 
         var lat2 = Math.asin( Math.sin(lat1) * Math.cos(distance) +
                    Math.cos(lat1) * Math.sin(distance) * Math.cos(bearing) );
         var lon2 = lon1 + Math.atan2(Math.sin(bearing) * Math.sin(distance) * Math.cos(lat1),
                    Math.cos(distance) - Math.sin(lat1) * Math.sin(lat2));
 
-        lon2 = (lon2+3*Math.PI) % (2*Math.PI) - Math.PI;  // Normalisoidaan välille -180º..+180º
+        lon2 = (lon2 + 3 * Math.PI) % (2 * Math.PI) - Math.PI;  // Normalisoidaan välille -180º..+180º
         return [lat2.toDeg(), lon2.toDeg()];
     };
 

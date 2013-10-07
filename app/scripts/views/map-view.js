@@ -1,21 +1,22 @@
-/*global define,google*/
+/*global define*/
 define([
     'backbone',
     'config',
     'models/trashcan',
     'views/trashcan-view',
     'collections/trashcans-collection',
-    'async!https://maps.googleapis.com/maps/api/js?key=AIzaSyDbfKJsRw2KfCzcokEtcypyR2wWYAiZREE&sensor=false'
-], function(Backbone, Config, Trashcan, TrashcanView, TrashcansCollection) {
+    'leaflet'
+], function(Backbone, Config, Trashcan, TrashcanView, TrashcansCollection, L) {
     'use strict';
 
     var MapView = Backbone.View.extend({
 
         id: 'map-canvas',
+        tagName: 'div',
 
         initialize: function() {
             // Käyttäjän sijainti Google-koordinaatteina
-            this.userPosition = new google.maps.LatLng(
+            this.userPosition = new L.LatLng(
                 window.App.userPosition.lat,
                 window.App.userPosition.lng
             );
@@ -24,7 +25,8 @@ define([
             this.mapOptions = {
                 center: this.userPosition,
                 zoom: Config.defaultZoom,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                attributionControl: false,
+                zoomControl: false,
                 disableDefaultUI: true
             };
 
@@ -41,33 +43,27 @@ define([
                 typeName: 'tampere_iris:WFS_ROSKIS',
                 outputFormat: 'application/json',
                 srsName: 'EPSG:4326',
-                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä (täytyy määrätä erikseen)
+                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä
             }).done(function(data){
                 this.trashcans = new TrashcansCollection();
+
                 for (var i = data.features.length - 1; i >= 0; i--) {
 
                     // Luodaan uusi model
                     var model = new Trashcan({
-                        position: new google.maps.LatLng(
+                        position: new L.LatLng(
                             data.features[i].geometry.coordinates[1],
                             data.features[i].geometry.coordinates[0]
-                        ),
-                        lat: data.features[i].geometry.coordinates[1],
-                        lng: data.features[i].geometry.coordinates[0]
+                        )
                     });
 
                     // Lisätään joukkoon
                     this.trashcans.add(model);
-
-                    // Piirretään näkymä
-                    new TrashcanView({
-                        model: model
-                    });
                 }
 
                 // Piirretään lähin roskis
                 new TrashcanView({
-                    model: this.trashcans.getClosest(this.userPosition)
+                    model: this.trashcans.getClosest(window.App.userPosition)
                 }).render();
 
             }.bind(this));
@@ -84,17 +80,26 @@ define([
             return bbox[1][1] + ',' + bbox[1][0] + ',' + bbox[0][1] + ',' + bbox[0][0];
         },
 
+        drawUser: function() {
+            new L.Marker(this.userPosition, {
+                icon: new L.divIcon({
+                    className: 'user-marker',
+                    iconAnchor: new L.Point(5,5) // marker-elementin keskikohta koordinaatteina
+                })
+            }).addTo(window.map);
+        },
+
         render: function() {
-            window.map = new google.maps.Map(this.el, this.mapOptions);
-
-            // Käyttäjä kartalle
-            new google.maps.Marker({
-                position: this.userPosition,
-                map: window.map,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-            });
-
             return this;
+        },
+
+        drawMapCanvas: function() {
+            window.map = L.map(this.el, this.mapOptions);
+            L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/997/256/{z}/{x}/{y}.png', {
+                maxZoom: 18
+            }).addTo(window.map);
+
+            this.drawUser();
         }
     });
 
