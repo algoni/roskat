@@ -12,6 +12,7 @@ define([
     var MapView = Backbone.View.extend({
 
         id: 'map-canvas',
+        tagName: 'div',
 
         initialize: function() {
             // Käyttäjän sijainti Google-koordinaatteina
@@ -42,9 +43,10 @@ define([
                 typeName: 'tampere_iris:WFS_ROSKIS',
                 outputFormat: 'application/json',
                 srsName: 'EPSG:4326',
-                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä (täytyy määrätä erikseen)
+                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä
             }).done(function(data){
                 this.trashcans = new TrashcansCollection();
+
                 for (var i = data.features.length - 1; i >= 0; i--) {
 
                     // Luodaan uusi model
@@ -82,7 +84,7 @@ define([
             new L.Marker(this.userPosition, {
                 icon: new L.divIcon({
                     className: 'user-marker',
-                    iconAnchor: new L.Point(5,5)
+                    iconAnchor: new L.Point(5,5) // marker-elementin keskikohta koordinaatteina
                 })
             }).addTo(window.map);
         },
@@ -93,7 +95,7 @@ define([
 
         drawMapCanvas: function() {
             window.map = L.map(this.el, this.mapOptions);
-            L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/110089/256/{z}/{x}/{y}.png', {
+            L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/997/256/{z}/{x}/{y}.png', {
                 maxZoom: 18
             }).addTo(window.map);
 

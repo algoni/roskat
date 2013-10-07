@@ -1,10 +1,9 @@
 /*global define*/
 define([
     'backbone',
-    'leaflet',
     'config',
     'views/map-view'
-], function(Backbone, L, Config, MapView) {
+], function(Backbone, Config, MapView) {
     'use strict';
 
     var AppView = Backbone.View.extend({
