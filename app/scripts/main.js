@@ -132,6 +132,6 @@ require(['backbone', 'views/app-view', 'config', 'leaflet'], function (Backbone,
         userPosition: null
     };
 
-    var app = new AppView();
+    new AppView().render();
 
 });

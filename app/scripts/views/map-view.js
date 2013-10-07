@@ -16,22 +16,15 @@ define([
 
         initialize: function() {
             // Käyttäjän sijainti Google-koordinaatteina
-            this.userPosition = new L.LatLng(
-                window.App.userPosition.lat,
-                window.App.userPosition.lng
-            );
 
             // Kartan asetukset, keskitetään käyttäjään
             this.mapOptions = {
-                center: this.userPosition,
-                zoom: Config.defaultZoom,
                 attributionControl: false,
                 zoomControl: false,
                 disableDefaultUI: true
             };
 
             // Haetaan roskakorit bounding boxin mukaan
-            this.drawNearestTrashcans(this.userPosition, Config.bboxRadius);
         },
 
         drawNearestTrashcans: function(position, range) {
@@ -63,7 +56,7 @@ define([
 
                 // Piirretään lähin roskis
                 new TrashcanView({
-                    model: this.trashcans.getClosest(window.App.userPosition)
+                    model: this.trashcans.getClosest(this.userPosition)
                 }).render();
 
             }.bind(this));
@@ -80,8 +73,8 @@ define([
             return bbox[1][1] + ',' + bbox[1][0] + ',' + bbox[0][1] + ',' + bbox[0][0];
         },
 
-        drawUser: function() {
-            new L.Marker(this.userPosition, {
+        drawUser: function(position) {
+            new L.Marker(position, {
                 icon: new L.divIcon({
                     className: 'user-marker',
                     iconAnchor: new L.Point(5,5) // marker-elementin keskikohta koordinaatteina
@@ -93,13 +86,20 @@ define([
             return this;
         },
 
+        locationFound: function(position) {
+            this.userPosition = position.latlng;
+            this.drawUser(position.latlng);
+            this.drawNearestTrashcans(position.latlng, Config.bboxRadius);
+        },
+
         drawMapCanvas: function() {
             window.map = L.map(this.el, this.mapOptions);
-            L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/997/256/{z}/{x}/{y}.png', {
-                maxZoom: 18
-            }).addTo(window.map);
 
-            this.drawUser();
+            window.map.on('locationfound', this.locationFound, this);
+
+            L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/110137/256/{z}/{x}/{y}.png')
+            .addTo(window.map);
+            window.map.locate({setView: true, maxZoom: 16});
         }
     });
 
