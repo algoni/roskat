@@ -293,7 +293,6 @@ module.exports = function (grunt) {
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/{,*/}*.*',
                         'bower_components/sass-bootstrap/fonts/*.*',
-                        'scripts/roskat.json',
                         'config.xml'
                     ]
                 }]
@@ -332,18 +331,8 @@ module.exports = function (grunt) {
             all: {
                 rjsConfig: '<%= yeoman.app %>/scripts/main.js'
             }
-        },
-
-        build_gh_pages: {
-            options: {
-                dist: 'dist'
-            }
         }
     });
-
-    grunt.registerTask('publish', [
-        'build_gh_pages'
-    ]);
 
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
