@@ -4,7 +4,7 @@ define([], function() {
     'use strict';
 
     var Config = {
-        defaultZoom: 16,
+        defaultZoom: 18,
         bboxRadius: 400 // metriä
     };
 

@@ -87,6 +87,7 @@ define([
         },
 
         locationFound: function(position) {
+            console.log(position);
             this.userPosition = position.latlng;
             this.drawUser(position.latlng);
             this.drawNearestTrashcans(position.latlng, Config.bboxRadius);
@@ -95,11 +96,16 @@ define([
         drawMapCanvas: function() {
             window.map = L.map(this.el, this.mapOptions);
 
-            window.map.on('locationfound', this.locationFound, this);
 
             L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/110137/256/{z}/{x}/{y}.png')
             .addTo(window.map);
-            window.map.locate({setView: true, maxZoom: 16});
+            window.map.locate({
+                setView: true,
+                maxZoom: Config.defaultZoom,
+                watch: true,
+                maximumAge: 4000
+            });
+            window.map.on('locationfound', this.locationFound, this);
         }
     });
 
