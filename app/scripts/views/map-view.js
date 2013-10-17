@@ -74,12 +74,18 @@ define([
         },
 
         drawUser: function(position) {
-            new L.Marker(position, {
-                icon: new L.divIcon({
-                    className: 'user-marker',
-                    iconAnchor: new L.Point(5,5) // marker-elementin keskikohta koordinaatteina
-                })
-            }).addTo(window.map);
+            if( this.userMarker ) {
+                this.userMarker.setLatLng(position);
+            }
+            else {
+                this.userMarker =  new L.Marker(position, {
+                    icon: new L.divIcon({
+                        className: 'user-marker',
+                        iconAnchor: new L.Point(5,5) // marker-elementin keskikohta koordinaatteina
+                    })
+                }).addTo(window.map);
+            }
+            console.log(this.userMarker._latlng);
         },
 
         render: function() {
@@ -87,15 +93,13 @@ define([
         },
 
         locationFound: function(position) {
-            console.log(position);
             this.userPosition = position.latlng;
             this.drawUser(position.latlng);
-            this.drawNearestTrashcans(position.latlng, Config.bboxRadius);
+            // this.drawNearestTrashcans(position.latlng, Config.bboxRadius);
         },
 
         drawMapCanvas: function() {
             window.map = L.map(this.el, this.mapOptions);
-
 
             L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/110137/256/{z}/{x}/{y}.png')
             .addTo(window.map);
