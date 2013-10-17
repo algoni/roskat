@@ -28,16 +28,15 @@ define([
         },
 
         drawNearestTrashcans: function(position, range) {
-            $.get('http://tampere.navici.com/tampere_wfs_geoserver/tampere_iris/ows',
+            var bbox =  this.calculateBoundingBox(position, range);
+            $.get('http://localhost:1337/roskat/get',
             {
-                service: 'WFS',
-                version: '2.0.0',
-                request: 'GetFeature',
-                typeName: 'tampere_iris:WFS_ROSKIS',
-                outputFormat: 'application/json',
-                srsName: 'EPSG:4326',
-                bbox: this.calculateBoundingBox(position, range) + ',EPSG:4326' // perään bboxin karttajärjestelmä
+                x1: bbox[1][0],
+                y1: bbox[1][1],
+                x2: bbox[0][0],
+                y2: bbox[0][1]
             }).done(function(data){
+                data = JSON.parse(data);
                 this.trashcans = new TrashcansCollection();
 
                 for (var i = data.features.length - 1; i >= 0; i--) {
@@ -70,7 +69,7 @@ define([
 
             // Koordinaatit väärinpäin stringinä, koska WFS
             // bbox on muotoa y1,x1,y2,x2
-            return bbox[1][1] + ',' + bbox[1][0] + ',' + bbox[0][1] + ',' + bbox[0][0];
+            return bbox;
         },
 
         drawUser: function(position) {
@@ -95,7 +94,7 @@ define([
         locationFound: function(position) {
             this.userPosition = position.latlng;
             this.drawUser(position.latlng);
-            // this.drawNearestTrashcans(position.latlng, Config.bboxRadius);
+            this.drawNearestTrashcans(position.latlng, Config.bboxRadius);
         },
 
         drawMapCanvas: function() {
