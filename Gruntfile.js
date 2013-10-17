@@ -293,7 +293,6 @@ module.exports = function (grunt) {
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/{,*/}*.*',
                         'bower_components/sass-bootstrap/fonts/*.*',
-                        'scripts/roskat.json',
                         'config.xml'
                     ]
                 }]
