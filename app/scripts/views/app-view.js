@@ -2,8 +2,9 @@
 define([
     'backbone',
     'config',
-    'views/map-view'
-], function(Backbone, Config, MapView) {
+    'views/map-view',
+    'views/search-view'
+], function(Backbone, Config, MapView, SearchView) {
     'use strict';
 
     var AppView = Backbone.View.extend({
@@ -11,9 +12,11 @@ define([
         el: 'body',
 
         render: function() {
-            var mapView = new MapView();
-            this.el.appendChild(mapView.render().el);
-            mapView.drawMapCanvas();
+            var searchView = new SearchView();
+            this.el.appendChild(searchView.render().el);
+            // var mapView = new MapView();
+            // this.el.appendChild(mapView.render().el);
+            // mapView.drawMapCanvas();
             return this;
         }
 
