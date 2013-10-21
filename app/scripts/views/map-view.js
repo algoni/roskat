@@ -4,9 +4,10 @@ define([
     'config',
     'models/trashcan',
     'views/trashcan-view',
+    'views/map-controls-view',
     'collections/trashcans-collection',
     'leaflet'
-], function(Backbone, Config, Trashcan, TrashcanView, TrashcansCollection, L) {
+], function(Backbone, Config, Trashcan, TrashcanView, ControlsView, TrashcansCollection, L) {
     'use strict';
 
     var MapView = Backbone.View.extend({
@@ -84,10 +85,10 @@ define([
                     })
                 }).addTo(window.map);
             }
-            console.log(this.userMarker._latlng);
         },
 
         render: function() {
+            this.$el.append(new ControlsView().render().el);
             return this;
         },
 

@@ -16,15 +16,16 @@ define([
         },
 
         render: function() {
-            var searchView = new SearchView();
-            this.el.appendChild(searchView.render().el);
+            this.searchView = new SearchView();
+            this.el.appendChild(this.searchView.render().el);
             return this;
         },
 
         showMapView: function() {
-            var mapView = new MapView();
-            this.$el.html(mapView.render().el);
-            mapView.drawMapCanvas();
+            this.searchView.remove();
+            this.mapView = new MapView();
+            this.$el.append(this.mapView.render().el);
+            this.mapView.drawMapCanvas();
         }
 
     });
