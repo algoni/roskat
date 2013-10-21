@@ -16,61 +16,41 @@ define([
         tagName: 'div',
 
         initialize: function() {
-            // Käyttäjän sijainti Google-koordinaatteina
-
             // Kartan asetukset, keskitetään käyttäjään
             this.mapOptions = {
                 attributionControl: false,
                 zoomControl: false,
                 disableDefaultUI: true
             };
-
-            // Haetaan roskakorit bounding boxin mukaan
         },
 
-        drawNearestTrashcans: function(position, range) {
-            var bbox =  this.calculateBoundingBox(position, range);
-            $.get('http://roskat-backend.herokuapp.com/roskat/get',
-            {
-                x1: bbox[1][0],
-                y1: bbox[1][1],
-                x2: bbox[0][0],
-                y2: bbox[0][1]
-            }).done(function(data){
-                data = JSON.parse(data);
-                this.trashcans = new TrashcansCollection();
-
-                for (var i = data.features.length - 1; i >= 0; i--) {
-
-                    // Luodaan uusi model
-                    var model = new Trashcan({
-                        position: new L.LatLng(
-                            data.features[i].geometry.coordinates[1],
-                            data.features[i].geometry.coordinates[0]
-                        )
-                    });
-
-                    // Lisätään joukkoon
-                    this.trashcans.add(model);
-                }
-
-                // Piirretään lähin roskis
-                new TrashcanView({
-                    model: this.trashcans.getClosest(this.userPosition)
-                }).render();
-
-            }.bind(this));
-        },
-
-        calculateBoundingBox: function(position, distance) {
+        drawNearestTrashcans: function(position, distance) {
             var bbox = [
                 position.getCoordWithDistanceAndAngle(distance, 45),
                 position.getCoordWithDistanceAndAngle(distance, 225)
             ];
+            this.trashcans = new TrashcansCollection();
+            this.trashcans.fetch({data: {
+                x1: bbox[1][0],
+                y1: bbox[1][1],
+                x2: bbox[0][0],
+                y2: bbox[0][1]
+            }});
+            this.trashcans.on('sync', function() {
+                if(this.closestTrashcan) {
+                    this.closestTrashcan.remove();
+                }
+                this.closestTrashcan = new TrashcanView({
+                    model: this.trashcans.getClosest(position)
+                }).render();
+            }, this);
+        },
 
-            // Koordinaatit väärinpäin stringinä, koska WFS
-            // bbox on muotoa y1,x1,y2,x2
-            return bbox;
+        calculateBbox: function(position, distance) {
+            return [
+                position.getCoordWithDistanceAndAngle(distance, 45),
+                position.getCoordWithDistanceAndAngle(distance, 225)
+            ];
         },
 
         drawUser: function(position) {

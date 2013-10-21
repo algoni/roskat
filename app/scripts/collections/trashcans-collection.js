@@ -6,6 +6,11 @@ define(['backbone', 'models/trashcan'], function(Backbone, Trashcan) {
     var Trashcans = Backbone.Collection.extend({
 
         model: Trashcan,
+        url: 'http://roskat-backend.herokuapp.com/roskat/get',
+
+        parse: function(response) {
+            return JSON.parse(response).features;
+        },
 
         getClosest: function(position) {
             var closest = {
@@ -14,8 +19,8 @@ define(['backbone', 'models/trashcan'], function(Backbone, Trashcan) {
             };
 
             for (var i = this.models.length - 1; i >= 0; i--) {
-                var a = Math.abs(this.models[i].get('position').lat - position.lat);
-                var b = Math.abs(this.models[i].get('position').lng- position.lng);
+                var a = Math.abs(this.models[i].get('geometry').coordinates[1] - position.lat);
+                var b = Math.abs(this.models[i].get('geometry').coordinates[0] - position.lng);
                 var distance = (a * a) + (b * b);
 
                 if (distance <= closest.distance) {
