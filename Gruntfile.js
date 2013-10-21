@@ -192,8 +192,11 @@ module.exports = function (grunt) {
                     // http://requirejs.org/docs/errors.html#sourcemapcomments
                     preserveLicenseComments: false,
                     useStrict: true,
-                    wrap: true
+                    wrap: true,
                     //uglify2: {} // https://github.com/mishoo/UglifyJS2
+                    paths: {
+                        'template': '../../.tmp/scripts/templates'
+                    }
                 }
             }
         },
@@ -331,7 +334,22 @@ module.exports = function (grunt) {
             all: {
                 rjsConfig: '<%= yeoman.app %>/scripts/main.js'
             }
+        },
+        handlebars: {
+            compile: {
+                options: {
+                    namespace: 'JST',
+                    amd: true
+                }
+            },
+            files: {
+                '<%= yeoman.app %>/scripts/templates.js': ['<%= yeoman.app %>/scripts/template/*.hbs']
+            }
         }
+    });
+
+    grunt.registerTask('createDefaultTemplate', function () {
+        grunt.file.write('.tmp/scripts/templates.js', 'this.JST = this.JST || {};');
     });
 
     grunt.registerTask('server', function (target) {
@@ -358,6 +376,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'createDefaultTemplate',
         'useminPrepare',
         'concurrent:dist',
         'autoprefixer',

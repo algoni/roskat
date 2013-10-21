@@ -81,11 +81,6 @@ require.config({
         leaflet: {
             exports: 'L',
             deps: []
-        },
-
-        handlebars: {
-            deps: [],
-            exports: 'Handlebars'
         }
     },
 
