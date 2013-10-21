@@ -1,5 +1,9 @@
 /*global define*/
-define(['backbone', 'hbs!tmpl/map-controls'], function(Backbone, Template) {
+define([
+    'backbone',
+    'collections/trashcans-collection',
+    'hbs!tmpl/map-controls'
+], function(Backbone, TrashcansCollection, Template) {
 
     'use strict';
 
@@ -8,6 +12,14 @@ define(['backbone', 'hbs!tmpl/map-controls'], function(Backbone, Template) {
         id: 'map-controls',
         className: 'map-controls',
         template: Template,
+
+        events: {
+            'click #trashcan-found': 'checkIfFound'
+        },
+
+        checkIfFound: function() {
+            window.App.Vent.trigger('locationCheckRequested');
+        },
 
         render: function() {
             // TODO: kuuntele sijaintia ja näytä Valmis! -painike vasta roskakorin lähellä

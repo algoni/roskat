@@ -22,6 +22,21 @@ define([
                 zoomControl: false,
                 disableDefaultUI: true
             };
+            window.App.Vent.on('locationCheckRequested', this.checkIfFound, this);
+        },
+
+        checkIfFound: function() {
+            if( !this.closestTrashcan ) {
+                return;
+            }
+            var closestLatLng = new L.LatLng(this.closestTrashcan.model.get('position').lat, this.closestTrashcan.model.get('position').lng);
+            var distance = this.userPosition.distanceTo(closestLatLng); // Etäisyys lähimpään roskakoriin metreinä
+            if(distance <= Config.correctAnswerDistance) {
+                console.log('Oikein!');
+            }
+            else {
+                console.log('Liian kaukana! Etäisyys ' + distance + ' metriä.');
+            }
         },
 
         drawNearestTrashcans: function(position, distance) {
