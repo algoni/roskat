@@ -128,6 +128,7 @@ require(['backbone', 'views/app-view', 'config', 'leaflet'], function (Backbone,
     };
 
     window.App = {
+        Vent: _.extend({}, Backbone.Events),
         config: Config,
         userPosition: null
     };

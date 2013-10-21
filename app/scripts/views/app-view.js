@@ -11,13 +11,20 @@ define([
 
         el: 'body',
 
+        initialize: function() {
+            window.App.Vent.on('showMap', this.showMapView, this);
+        },
+
         render: function() {
             var searchView = new SearchView();
             this.el.appendChild(searchView.render().el);
-            // var mapView = new MapView();
-            // this.el.appendChild(mapView.render().el);
-            // mapView.drawMapCanvas();
             return this;
+        },
+
+        showMapView: function() {
+            var mapView = new MapView();
+            this.$el.html(mapView.render().el);
+            mapView.drawMapCanvas();
         }
 
     });

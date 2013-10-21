@@ -29,7 +29,7 @@ define([
 
         drawNearestTrashcans: function(position, range) {
             var bbox =  this.calculateBoundingBox(position, range);
-            $.get('http://localhost:1337/roskat/get',
+            $.get('http://roskat-backend.herokuapp.com/roskat/get',
             {
                 x1: bbox[1][0],
                 y1: bbox[1][1],
