@@ -5,8 +5,13 @@ define(['backbone', 'leaflet'], function(Backbone, L) {
 
     var TrashcanView = Backbone.View.extend({
 
-        render: function(markerIcon) {
-            new L.Marker(this.model.get('position')).addTo(window.map);
+        render: function() {
+            new L.Marker(this.model.get('position'), {
+                icon: new L.divIcon({
+                    className: 'trashcan-marker',
+                    iconAnchor: new L.Point(5,5) // marker-elementin keskikohta koordinaatteina
+                })
+            }).addTo(window.map);
             return this;
         }
     });
