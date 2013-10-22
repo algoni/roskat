@@ -4,72 +4,69 @@ define([
     'config',
     'models/trashcan',
     'views/trashcan-view',
+    'views/map-controls-view',
     'collections/trashcans-collection',
+    'hbs!tmpl/mapview',
     'leaflet'
-], function(Backbone, Config, Trashcan, TrashcanView, TrashcansCollection, L) {
+], function(Backbone, Config, Trashcan, TrashcanView, ControlsView, TrashcansCollection, Template, L) {
     'use strict';
 
     var MapView = Backbone.View.extend({
 
-        id: 'map-canvas',
-        tagName: 'div',
+        id: 'map-view',
+        className: 'map-view',
+        template: Template,
 
         initialize: function() {
-            // Käyttäjän sijainti Google-koordinaatteina
-
             // Kartan asetukset, keskitetään käyttäjään
             this.mapOptions = {
                 attributionControl: false,
                 zoomControl: false,
                 disableDefaultUI: true
             };
-
-            // Haetaan roskakorit bounding boxin mukaan
+            window.App.Vent.on('locationCheckRequested', this.checkDistanceToTarget, this);
         },
 
-        drawNearestTrashcans: function(position, range) {
-            var bbox =  this.calculateBoundingBox(position, range);
-            $.get('http://localhost:1337/roskat/get',
-            {
+        checkDistanceToTarget: function() {
+            if( !this.closestTrashcan ) {
+                console.log('Ei lähintä olemassa.');
+                return;
+            }
+            var closestLatLng = new L.LatLng(this.closestTrashcan.model.get('position').lat, this.closestTrashcan.model.get('position').lng);
+            var distance = this.userPosition.distanceTo(closestLatLng); // Etäisyys lähimpään roskakoriin metreinä
+            if(distance <= Config.correctAnswerDistance) {
+                window.App.Vent.trigger('user:targetFound');
+            }
+            else {
+                distance = Math.ceil(distance);
+                window.App.Vent.trigger('user:targetTooFar', {distance: distance});
+            }
+        },
+
+        drawNearestTrashcan: function(position, distance) {
+            var bbox = this.calculateBbox(position, distance);
+            this.trashcans = new TrashcansCollection();
+            this.trashcans.fetch({data: {
                 x1: bbox[1][0],
                 y1: bbox[1][1],
                 x2: bbox[0][0],
                 y2: bbox[0][1]
-            }).done(function(data){
-                data = JSON.parse(data);
-                this.trashcans = new TrashcansCollection();
-
-                for (var i = data.features.length - 1; i >= 0; i--) {
-
-                    // Luodaan uusi model
-                    var model = new Trashcan({
-                        position: new L.LatLng(
-                            data.features[i].geometry.coordinates[1],
-                            data.features[i].geometry.coordinates[0]
-                        )
-                    });
-
-                    // Lisätään joukkoon
-                    this.trashcans.add(model);
+            }});
+            this.trashcans.on('sync', function() {
+                if(this.closestTrashcan) {
+                    this.closestTrashcan.remove();
                 }
-
-                // Piirretään lähin roskis
-                new TrashcanView({
-                    model: this.trashcans.getClosest(this.userPosition)
+                this.closestTrashcan = new TrashcanView({
+                    model: this.trashcans.getClosest(position)
                 }).render();
-
-            }.bind(this));
+            }, this);
         },
 
-        calculateBoundingBox: function(position, distance) {
-            var bbox = [
+        calculateBbox: function(position, distance) {
+            return [
                 position.getCoordWithDistanceAndAngle(distance, 45),
                 position.getCoordWithDistanceAndAngle(distance, 225)
             ];
-
-            // Koordinaatit väärinpäin stringinä, koska WFS
-            // bbox on muotoa y1,x1,y2,x2
-            return bbox;
         },
 
         drawUser: function(position) {
@@ -84,31 +81,46 @@ define([
                     })
                 }).addTo(window.map);
             }
-            console.log(this.userMarker._latlng);
         },
 
         render: function() {
+            this.el.innerHTML = this.template();
+            this.$el.append(new ControlsView().render().el);
             return this;
         },
 
-        locationFound: function(position) {
-            this.userPosition = position.latlng;
-            this.drawUser(position.latlng);
-            this.drawNearestTrashcans(position.latlng, Config.bboxRadius);
+        initCurrentLocation: function(event) {
+            console.log(event);
+            this.userPosition = event.latlng;
+            this.drawNearestTrashcan(this.userPosition, Config.bboxRadius);
+            // Rajataan kartta siten, että lähin roskakori on aina näkyvissä
+            window.map.fitBounds(this.calculateBbox(this.userPosition, Config.bboxRadius));
+
+            // Nyt voidaan piirtää käyttäjä joka kerta, kun sijainti päivittyy
+            this.drawUser(this.userPosition);
+            window.map.on('locationfound', this.updateApplicationState, this);
+        },
+
+        updateApplicationState: function(event) {
+            console.log(event);
+            this.userPosition = event.latlng;
+            this.drawUser(this.userPosition);
+            window.App.Vent.trigger('locationCheckRequested');
         },
 
         drawMapCanvas: function() {
-            window.map = L.map(this.el, this.mapOptions);
-
+            window.map = L.map('map-canvas', this.mapOptions);
             L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/110137/256/{z}/{x}/{y}.png')
             .addTo(window.map);
             window.map.locate({
-                setView: true,
+                setView: false,
                 maxZoom: Config.defaultZoom,
                 watch: true,
+                enableHighAccuracy: true,
                 maximumAge: 4000
             });
-            window.map.on('locationfound', this.locationFound, this);
+            // Ensimmäisellä lokaatiokerralla etsitään roskakorit ja keskitetään kartta käyttäjään
+            window.map.once('locationfound', this.initCurrentLocation, this);
         }
     });
 

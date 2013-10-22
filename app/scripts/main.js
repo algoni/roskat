@@ -81,11 +81,6 @@ require.config({
         leaflet: {
             exports: 'L',
             deps: []
-        },
-
-        handlebars: {
-            deps: [],
-            exports: 'Handlebars'
         }
     },
 
@@ -94,7 +89,13 @@ require.config({
     }
 });
 
-require(['backbone', 'views/app-view', 'config', 'leaflet'], function (Backbone, AppView, Config, L) {
+require([
+    'backbone',
+    'underscore',
+    'views/app-view',
+    'config',
+    'leaflet'
+], function (Backbone, _, AppView, Config, L) {
     'use strict';
 
     if (typeof Number.prototype.toRad === 'undefined') {
@@ -128,6 +129,7 @@ require(['backbone', 'views/app-view', 'config', 'leaflet'], function (Backbone,
     };
 
     window.App = {
+        Vent: _.extend({}, Backbone.Events),
         config: Config,
         userPosition: null
     };
