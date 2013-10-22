@@ -14,16 +14,21 @@ define([
         template: Template,
 
         events: {
-            'click #trashcan-found': 'checkIfFound'
+            'click #trashcan-found': 'completeQuest'
         },
 
-        checkIfFound: function() {
-            window.App.Vent.trigger('locationCheckRequested');
+        initialize: function() {
+            window.App.Vent.on('user:targetTooFar', this.render, this);
         },
 
-        render: function() {
+        completeQuest: function() {
+
+        },
+
+        render: function(context) {
+            context = context || {};
             // TODO: kuuntele sijaintia ja näytä Valmis! -painike vasta roskakorin lähellä
-            this.el.innerHTML = this.template();
+            this.el.innerHTML = this.template(context);
             return this;
         }
 

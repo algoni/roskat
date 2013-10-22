@@ -24,27 +24,26 @@ define([
                 zoomControl: false,
                 disableDefaultUI: true
             };
-            window.App.Vent.on('locationCheckRequested', this.checkIfFound, this);
+            window.App.Vent.on('locationCheckRequested', this.checkDistanceToTarget, this);
         },
 
-        checkIfFound: function() {
+        checkDistanceToTarget: function() {
             if( !this.closestTrashcan ) {
-                console.log('Ei lähintä.');
+                console.log('Ei lähintä olemassa.');
                 return;
             }
             var closestLatLng = new L.LatLng(this.closestTrashcan.model.get('position').lat, this.closestTrashcan.model.get('position').lng);
             var distance = this.userPosition.distanceTo(closestLatLng); // Etäisyys lähimpään roskakoriin metreinä
             if(distance <= Config.correctAnswerDistance) {
-                $('#distance').html('Oikein!');
+                window.App.Vent.trigger('user:targetFound');
             }
             else {
-                distance = +(Math.round(distance + 'e+2') + 'e-2');
-                $('#distance').html('Liian kaukana! Etäisyys ' + distance + ' metriä.');
+                distance = Math.ceil(distance);
+                window.App.Vent.trigger('user:targetTooFar', {distance: distance});
             }
         },
 
         drawNearestTrashcan: function(position, distance) {
-            console.log(position);
             var bbox = this.calculateBbox(position, distance);
             this.trashcans = new TrashcansCollection();
             this.trashcans.fetch({data: {
@@ -90,15 +89,23 @@ define([
             return this;
         },
 
-        initCurrentLocation: function(position) {
-            console.log('event!');
-            this.userPosition = position.latlng;
+        initCurrentLocation: function(event) {
+            console.log(event);
+            this.userPosition = event.latlng;
             this.drawNearestTrashcan(this.userPosition, Config.bboxRadius);
             // Rajataan kartta siten, että lähin roskakori on aina näkyvissä
             window.map.fitBounds(this.calculateBbox(this.userPosition, Config.bboxRadius));
 
             // Nyt voidaan piirtää käyttäjä joka kerta, kun sijainti päivittyy
-            window.map.on('locationfound', this.drawUser(this.userPosition), this);
+            this.drawUser(this.userPosition);
+            window.map.on('locationfound', this.updateApplicationState, this);
+        },
+
+        updateApplicationState: function(event) {
+            console.log(event);
+            this.userPosition = event.latlng;
+            this.drawUser(this.userPosition);
+            window.App.Vent.trigger('locationCheckRequested');
         },
 
         drawMapCanvas: function() {
