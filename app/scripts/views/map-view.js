@@ -6,14 +6,16 @@ define([
     'views/trashcan-view',
     'views/map-controls-view',
     'collections/trashcans-collection',
+    'hbs!tmpl/mapview',
     'leaflet'
-], function(Backbone, Config, Trashcan, TrashcanView, ControlsView, TrashcansCollection, L) {
+], function(Backbone, Config, Trashcan, TrashcanView, ControlsView, TrashcansCollection, Template, L) {
     'use strict';
 
     var MapView = Backbone.View.extend({
 
-        id: 'map-canvas',
-        tagName: 'div',
+        id: 'map-view',
+        className: 'map-view',
+        template: Template,
 
         initialize: function() {
             // Kartan asetukset, keskitetään käyttäjään
@@ -22,7 +24,6 @@ define([
                 zoomControl: false,
                 disableDefaultUI: true
             };
-            window.map = L.map(this.el, this.mapOptions);
             window.App.Vent.on('locationCheckRequested', this.checkIfFound, this);
         },
 
@@ -84,6 +85,7 @@ define([
         },
 
         render: function() {
+            this.el.innerHTML = this.template();
             this.$el.append(new ControlsView().render().el);
             return this;
         },
@@ -100,7 +102,7 @@ define([
         },
 
         drawMapCanvas: function() {
-
+            window.map = L.map('map-canvas', this.mapOptions);
             L.tileLayer('http://{s}.tile.cloudmade.com/c3cc91391a2647e5a229c9ab6e4fe136/110137/256/{z}/{x}/{y}.png')
             .addTo(window.map);
             window.map.locate({
