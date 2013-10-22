@@ -3,11 +3,13 @@ define([
     'backbone',
     'config',
     'views/map-view',
+    'views/menu-view',
     'views/search-view'
-], function(Backbone, Config, MapView, SearchView) {
+], function(Backbone, Config, MapView, MenuView, SearchView) {
+
     'use strict';
 
-    var AppView = Backbone.View.extend({
+    return Backbone.View.extend({
 
         el: 'body',
 
@@ -17,6 +19,7 @@ define([
 
         render: function() {
             this.searchView = new SearchView();
+            this.$el.append(new MenuView().render().el);
             this.el.appendChild(this.searchView.render().el);
             return this;
         },
@@ -29,6 +32,4 @@ define([
         }
 
     });
-
-    return AppView;
 });
