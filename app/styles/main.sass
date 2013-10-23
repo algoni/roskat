@@ -4,14 +4,22 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/"
 @import 'compass'
 @import 'leaflet'
 @import 'markers'
+@import 'menu'
 @import 'search'
 @import 'map'
+
+*
+    -webkit-user-select: none
+    +box-sizing(border-box)
 
 html, body
     background: $light_green
     margin: 0
     width: 100%
     height: 100%
+
+body
+    padding-top: $status_bar_height
 
 #compass-view
     position: absolute

@@ -35,7 +35,7 @@ define([
             var closestLatLng = new L.LatLng(this.closestTrashcan.model.get('position').lat, this.closestTrashcan.model.get('position').lng);
             var distance = this.userPosition.distanceTo(closestLatLng); // Etäisyys lähimpään roskakoriin metreinä
             if(distance <= Config.correctAnswerDistance) {
-                window.App.Vent.trigger('user:targetFound');
+                window.App.Vent.trigger('user:targetFound', {found: true});
             }
             else {
                 distance = Math.ceil(distance);
@@ -59,6 +59,7 @@ define([
                 this.closestTrashcan = new TrashcanView({
                     model: this.trashcans.getClosest(position)
                 }).render();
+                this.checkDistanceToTarget();
             }, this);
         },
 

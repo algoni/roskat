@@ -1,0 +1,66 @@
+//------------------------------------------------------------------------------
+// Siirretään päänäkymä sivuun kun valikko on aktiivinen
+//------------------------------------------------------------------------------
+
+$menu_width: 150px
+
+body
+    position: absolute
+    +transition-property(right)
+    +transition-duration(0.5s)
+    &.menu-active
+        right: $menu_width
+
+.main-navigation
+
+    .navbar
+        font-weight: bold
+        font-size: 1.2em
+        background: lighten($light_green, 10%)
+        padding: 18px
+        height: $menu_height
+
+    .back-icon
+        float: left
+
+    .menu-icon
+        float: right
+
+    .main-menu
+        +box-sizing(border-box)
+        background: $teal
+        color: $yellow
+        list-style: none
+        margin: 0
+        padding: 25px
+        position: absolute
+        top: $status_bar_height
+        bottom: 0
+        right: -$menu_width
+        width: $menu_width
+        display: none
+        .menu-active &
+            display: block
+
+        li
+            padding-bottom: 5px
+
+
+// .main-navigation
+//     +transition-property(left)
+//     +transition-duration(1s)
+//     position: absolute
+//     .main-menu
+//         background: $teal
+//         color: $yellow
+//         position: absolute
+//         left: -100%
+//         bottom: 0
+//         top: 0
+//         list-style: none
+//         margin: 0
+//         padding: 0 2em
+//         z-index: 2
+
+//     &.active .main-menu
+//         left: 0
