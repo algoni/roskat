@@ -16,7 +16,9 @@ define([
         el: 'body',
 
         initialize: function() {
-            window.App.Vent.on('showMap', this.showMapView, this);
+            window.App.Vent.on('navigation:showMapView', this.showMapView, this);
+            window.App.Vent.on('navigation:showMainView', this.showSearchView, this);
+
             $.get('http://roskat-backend.herokuapp.com/user/check?id=' + window.App.user.id, function(res) {
                 if( res.length === 0 ) {
                     this.showRegisterForm();
@@ -42,16 +44,23 @@ define([
 
         render: function() {
             this.searchView = new SearchView();
-            this.$el.append(new MenuView().render().el);
+            this.mapView = new MapView();
+            this.el.appendChild(new MenuView().render().el);
             this.el.appendChild(this.searchView.render().el);
+            this.el.appendChild(this.mapView.render().el);
+            this.mapView.drawMapCanvas();
+            this.showSearchView();
             return this;
         },
 
+        showSearchView: function() {
+            this.searchView.$el.addClass('active');
+            this.mapView.$el.removeClass('active');
+        },
+
         showMapView: function() {
-            this.searchView.remove();
-            this.mapView = new MapView();
-            this.$el.append(this.mapView.render().el);
-            this.mapView.drawMapCanvas();
+            this.searchView.$el.removeClass('active');
+            this.mapView.$el.addClass('active');
         }
 
     });

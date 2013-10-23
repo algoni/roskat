@@ -1,18 +1,14 @@
 .map-view
     position: absolute
     top: $menu_height + $status_bar_height
-    bottom: 20px
+    bottom: $footer_height
     left: 0
     right: 0
+    z-index: -1
+    &.active
+        z-index: 0
 
-    .map-container
-        position: absolute
-        top: 0
-        bottom: 30px
-        left: 0
-        right: 0
-
-#map-canvas
+.map-canvas
     height: 100%
     width: 100%
 

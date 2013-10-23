@@ -3,7 +3,15 @@
     <div id="menu-icon" class="menu-icon">☰</div>
 </div>
 <ul class="main-menu" id="main-menu">
-    <li>{{name}}</li>
-    <li>{{points}}</li>
-    <li><a href="#">Takaisin</a></li>
+    {{#with currentUser}}
+        <li>{{name}}</li>
+        <li>{{points}}</li>
+        <li><a href="#">Takaisin</a></li>
+        <li></li>
+    {{/with}}
+    <ol>
+    {{#each topUsers}}
+        <li>{{name}}<br>{{points}}</li>
+    {{/each}}
+    </ol>
 </ul>

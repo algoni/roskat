@@ -17,8 +17,7 @@ define([
         },
 
         beginSearch: function() {
-            this.$('#search-button').html('Etsitään...');
-            window.App.Vent.trigger('showMap');
+            window.App.Vent.trigger('navigation:showMapView');
         },
 
         render: function() {

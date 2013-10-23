@@ -1,8 +1,9 @@
 /*global define*/
 define([
     'backbone',
-    'hbs!tmpl/main-menu'
-], function(Backbone, Template) {
+    'hbs!tmpl/main-menu',
+    'collections/users-collection'
+], function(Backbone, Template, Users) {
 
     'use strict';
 
@@ -11,6 +12,7 @@ define([
         className: 'main-navigation',
         tagName: 'nav',
         template: Template,
+        context: {},
 
         events: {
             'click #menu-icon': 'toggleMenu',
@@ -19,10 +21,17 @@ define([
 
         initialize: function() {
             window.App.Vent.on('user:loggedIn', this.displayUserName, this);
+            var topUsers = new Users();
+            topUsers.fetch();
+            topUsers.on('sync', function() {
+                this.context.topUsers = topUsers.toJSON();
+                this.render();
+            }, this);
         },
 
         displayUserName: function() {
-            this.render(window.App.userModel.toJSON());
+            this.context.currentUser = window.App.userModel.toJSON();
+            this.render();
         },
 
         showMainView: function() {
@@ -33,11 +42,11 @@ define([
             $('body').toggleClass('menu-active');
         },
 
-        render: function(context) {
-            context = context || {
+        render: function() {
+            this.context.currentUser = this.context.currentUser || {
                 name: 'Ei kirjautunut'
             };
-            this.el.innerHTML = this.template(context);
+            this.el.innerHTML = this.template(this.context);
             return this;
         }
 
