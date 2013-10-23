@@ -2,10 +2,12 @@
 define([
     'backbone',
     'config',
+    'models/user',
     'views/map-view',
     'views/menu-view',
-    'views/search-view'
-], function(Backbone, Config, MapView, MenuView, SearchView) {
+    'views/search-view',
+    'views/register-view',
+], function(Backbone, Config, User, MapView, MenuView, SearchView, RegisterView) {
 
     'use strict';
 
@@ -15,21 +17,27 @@ define([
 
         initialize: function() {
             window.App.Vent.on('showMap', this.showMapView, this);
-
             $.get('http://roskat-backend.herokuapp.com/user/check?id=' + window.App.user.id, function(res) {
                 if( res.length === 0 ) {
-                    $.ajax({
-                        method: 'post',
-                        url: 'http://roskat-backend.herokuapp.com/user/register',
-                        data: {
-                            msg: btoa('Selain:' + window.App.user.id)
-                        }
-                    });
+                    this.showRegisterForm();
                 }
                 else {
-                    window.App.Vent.trigger('user:loggedIn', res[0]);
+                    window.App.userModel = new User({
+                        name: res[0].name,
+                        id: window.App.user.id
+                    });
+                    $.get('http://roskat-backend.herokuapp.com/score/personal?user=' + res[0].name, function(res) {
+                        if( res[0] ) {
+                            window.App.userModel.set('points', res[0].points);
+                        }
+                        window.App.Vent.trigger('user:loggedIn');
+                    }.bind(this));
                 }
-            });
+            }.bind(this));
+        },
+
+        showRegisterForm: function() {
+            this.$el.append(new RegisterView().render().el);
         },
 
         render: function() {

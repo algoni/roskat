@@ -138,14 +138,23 @@ require([
         userPosition: null
     };
 
-    document.addEventListener('deviceready', function() {
+    function onDeviceReady() {
         window.App.user = {
             id: md5(device.uuid)
-        }
-    }, false);
+        };
+        new AppView().render();
+    }
 
-    window.App.user = window.App.user || { id: md5('roskasalaatti') };
+    function browserInit() {
+        window.App.user = {
+            id: md5('roskasalaatti')
+        };
+        new AppView().render();
+    }
 
-    new AppView().render();
-
+    if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+        document.addEventListener('deviceready', onDeviceReady, false);
+    } else {
+        browserInit();
+    }
 });

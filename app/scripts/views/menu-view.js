@@ -21,9 +21,8 @@ define([
             window.App.Vent.on('user:loggedIn', this.displayUserName, this);
         },
 
-        displayUserName: function(user) {
-            console.log(user);
-            this.render(user);
+        displayUserName: function() {
+            this.render(window.App.userModel.toJSON());
         },
 
         showMainView: function() {
