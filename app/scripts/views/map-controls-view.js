@@ -19,10 +19,11 @@ define([
 
         initialize: function() {
             window.App.Vent.on('user:targetTooFar', this.render, this);
+            window.App.Vent.on('user:targetFound', this.render, this);
         },
 
         completeQuest: function() {
-
+            console.log('Tavaraa lähtee ny');
         },
 
         render: function(context) {

@@ -11,7 +11,8 @@
     "requirejs-text": "~2.0.10",
     "require-handlebars-plugin": "~0.4.0",
     "handlebars": "~1.0.0",
-    "leaflet-dist": "~0.6.4"
+    "leaflet-dist": "~0.6.4",
+    "js-md5": "~1.0.3"
   },
   "devDependencies": {}
 }

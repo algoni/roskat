@@ -14,6 +14,9 @@ require.config({
         bootstrapTooltip: '../bower_components/sass-bootstrap/js/tooltip',
         bootstrapTransition: '../bower_components/sass-bootstrap/js/transition',
 
+        /* MD5 */
+        md5: '../bower_components/js-md5/js/md5',
+
         /* Backbone */
         backbone: '../bower_components/backbone-amd/backbone',
         underscore: '../bower_components/underscore/underscore',
@@ -94,8 +97,9 @@ require([
     'underscore',
     'views/app-view',
     'config',
-    'leaflet'
-], function (Backbone, _, AppView, Config, L) {
+    'leaflet',
+    'md5'
+], function (Backbone, _, AppView, Config, L, md5) {
     'use strict';
 
     if (typeof Number.prototype.toRad === 'undefined') {
@@ -128,11 +132,19 @@ require([
         return [lat2.toDeg(), lon2.toDeg()];
     };
 
-    window.App = {
+    window.App = window.App || {
         Vent: _.extend({}, Backbone.Events),
         config: Config,
         userPosition: null
     };
+
+    document.addEventListener('deviceready', function() {
+        window.App.user = {
+            id: md5(device.uuid)
+        }
+    }, false);
+
+    window.App.user = window.App.user || { id: md5('roskasalaatti') };
 
     new AppView().render();
 

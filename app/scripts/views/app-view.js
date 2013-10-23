@@ -15,6 +15,21 @@ define([
 
         initialize: function() {
             window.App.Vent.on('showMap', this.showMapView, this);
+
+            $.get('http://roskat-backend.herokuapp.com/user/check?id=' + window.App.user.id, function(res) {
+                if( res.length === 0 ) {
+                    $.ajax({
+                        method: 'post',
+                        url: 'http://roskat-backend.herokuapp.com/user/register',
+                        data: {
+                            msg: btoa('Selain:' + window.App.user.id)
+                        }
+                    });
+                }
+                else {
+                    window.App.Vent.trigger('user:loggedIn', res[0]);
+                }
+            });
         },
 
         render: function() {
