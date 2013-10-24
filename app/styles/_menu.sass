@@ -2,7 +2,7 @@
 // Siirretään päänäkymä sivuun kun valikko on aktiivinen
 //------------------------------------------------------------------------------
 
-$menu_width: 150px
+$menu_width: 200px
 
 body
     position: absolute
@@ -17,13 +17,14 @@ body
         font-weight: bold
         font-size: 1.2em
         background: lighten($light_green, 10%)
-        padding: 18px
         height: $menu_height
 
     .back-icon
+        +menu-icon
         float: left
 
     .menu-icon
+        +menu-icon
         float: right
 
     .main-menu

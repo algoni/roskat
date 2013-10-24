@@ -17,6 +17,9 @@ require.config({
         /* MD5 */
         md5: '../bower_components/js-md5/js/md5',
 
+        /* FastClick : remove 300ms delay on touch clicks */
+        fastclick: '../bower_components/fastclick/lib/fastclick',
+
         /* Backbone */
         backbone: '../bower_components/backbone-amd/backbone',
         underscore: '../bower_components/underscore/underscore',
@@ -98,9 +101,14 @@ require([
     'views/app-view',
     'config',
     'leaflet',
-    'md5'
-], function (Backbone, _, AppView, Config, L, md5) {
+    'md5',
+    'fastclick'
+], function (Backbone, _, AppView, Config, L, md5, FastClick) {
     'use strict';
+
+    window.addEventListener('load', function() {
+        FastClick.attach(document.body);
+    });
 
     if (typeof Number.prototype.toRad === 'undefined') {
         Number.prototype.toRad = function() {

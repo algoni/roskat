@@ -1,7 +1,7 @@
 .map-view
     position: absolute
     top: $menu_height + $status_bar_height
-    bottom: $footer_height
+    bottom: 0
     left: 0
     right: 0
     z-index: -1
@@ -9,8 +9,10 @@
         z-index: 0
 
 .map-canvas
-    height: 100%
     width: 100%
+    position: absolute
+    top: 0
+    bottom: $footer_height
 
 .map-controls
 
