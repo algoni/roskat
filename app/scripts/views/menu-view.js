@@ -20,18 +20,10 @@ define([
         },
 
         initialize: function() {
-            window.App.Vent.on('user:loggedIn', this.displayUserName, this);
-            var topUsers = new Users();
-            topUsers.fetch();
-            topUsers.on('sync', function() {
-                this.context.topUsers = topUsers.toJSON();
-                this.render();
-            }, this);
-        },
-
-        displayUserName: function() {
-            this.context.currentUser = window.App.userModel.toJSON();
-            this.render();
+            this.collection.fetch();
+            window.App.Vent.on('quest:completionRegistered', this.render, this);
+            this.model.on('change', this.render, this);
+            this.collection.on('sync', this.render, this);
         },
 
         showMainView: function() {
@@ -43,10 +35,14 @@ define([
         },
 
         render: function() {
+            console.log(this.model.toJSON());
             this.context.currentUser = this.context.currentUser || {
                 name: 'Ei kirjautunut'
             };
-            this.el.innerHTML = this.template(this.context);
+            this.el.innerHTML = this.template({
+                currentUser: this.model.toJSON(),
+                topUsers: this.collection.toJSON()
+            });
             return this;
         }
 

@@ -28,13 +28,16 @@ define([
 
         checkDistanceToTarget: function() {
             if( !this.closestTrashcan ) {
-                console.log('Ei lähintä olemassa.');
+                console.log('Ei lähintä roskakoria.');
                 return;
             }
             var closestLatLng = new L.LatLng(this.closestTrashcan.model.get('position').lat, this.closestTrashcan.model.get('position').lng);
             var distance = this.userPosition.distanceTo(closestLatLng); // Etäisyys lähimpään roskakoriin metreinä
             if(distance <= Config.correctAnswerDistance) {
-                window.App.Vent.trigger('user:targetFound', {found: true});
+                window.App.Vent.trigger('user:targetFound', {
+                    found: true,
+                    distance: this.userStartingPosition.distanceTo(closestLatLng)
+                });
             }
             else {
                 distance = Math.ceil(distance);
@@ -88,12 +91,11 @@ define([
             this.mapElement = document.createElement('div');
             this.mapElement.setAttribute('class', 'map-canvas');
             this.el.appendChild(this.mapElement);
-            console.log(this.mapElement);
             return this;
         },
 
         initCurrentLocation: function(event) {
-            console.log(event);
+            this.userStartingPosition = event.latlng;
             this.userPosition = event.latlng;
             this.drawNearestTrashcan(this.userPosition, Config.bboxRadius);
             // Rajataan kartta siten, että lähin roskakori on aina näkyvissä
@@ -105,7 +107,6 @@ define([
         },
 
         updateApplicationState: function(event) {
-            console.log(event);
             this.userPosition = event.latlng;
             this.drawUser(this.userPosition);
             window.App.Vent.trigger('locationCheckRequested');

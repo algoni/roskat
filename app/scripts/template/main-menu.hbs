@@ -2,14 +2,20 @@
     <div id="back-icon" class="back-icon">←</div>
     <div id="menu-icon" class="menu-icon">☰</div>
 </div>
-<ul class="main-menu" id="main-menu">
-    {{#with currentUser}}
-        <li>{{name}}</li>
-        <li>{{points}}</li>
-    {{/with}}
-    <ol>
+
+<div class="main-menu">
+    <ul id="main-menu">
+        {{#with currentUser}}
+            <li>{{name}}</li>
+            <li>{{points}}</li>
+        {{/with}}
+    </ul>
+    <ol class="top-players">
     {{#each topUsers}}
-        <li>{{name}}<br>{{points}}</li>
+        <li class="player">
+            <span class="name">{{name}}</span>
+            <span class="points">{{points}}</span>
+        </li>
     {{/each}}
     </ol>
-</ul>
+</div>
