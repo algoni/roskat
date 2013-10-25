@@ -14,14 +14,16 @@ body
 .main-navigation
 
     .navbar
+        background: lighten($light_green, 10%)
+        border-bottom: 1px solid desaturate(lighten($dark_green, 20%), 60%)
         font-weight: bold
         font-size: 1.2em
-        background: lighten($light_green, 10%)
         height: $menu_height
 
     .back-icon
         +menu-icon
         float: left
+        display: none
 
     .menu-icon
         +menu-icon
@@ -29,8 +31,8 @@ body
 
     .main-menu
         +box-sizing(border-box)
-        background: $teal
-        color: $yellow
+        background: $dark_brown
+        color: $almost_white
         list-style: none
         margin: 0
         padding: 25px

@@ -1,9 +1,16 @@
 /*global define*/
-define(['backbone'], function(Backbone) {
+define([
+    'backbone',
+    'hbs!tmpl/register'
+], function(Backbone, Template) {
 
     'use strict';
 
     return Backbone.View.extend({
+
+        template: Template,
+        id: 'register-view',
+        className: 'register-view',
 
         events: {
             'click #submit-user': 'submitUser'
@@ -19,16 +26,14 @@ define(['backbone'], function(Backbone) {
                         msg: btoa(username + ':' + window.App.user.id)
                     },
                     success: function() {
-                        console.log(this);
                         window.App.Vent.trigger('user:loggedIn', { name: username });
-                        this.remove();
                     }.bind(this)
                 });
             }
         },
 
         render: function() {
-            this.el.innerHTML = '<input type="text" id="username" placeholder="Käyttäjänimesi"><button id="submit-user">OK</button>';
+            this.el.innerHTML = this.template();
             return this;
         }
     });

@@ -1,9 +1,8 @@
 /*global define*/
 define([
     'backbone',
-    'hbs!tmpl/main-menu',
-    'collections/users-collection'
-], function(Backbone, Template, Users) {
+    'hbs!tmpl/main-menu'
+], function(Backbone, Template) {
 
     'use strict';
 

@@ -1,6 +1,21 @@
+@mixin x-large-button
+    background: $dark_green
+    border: 1px solid $dark_green
+    +border-radius(5px)
+    color: white
+    font-size: 32px
+    font-weight: 100
+    padding: 10px 20px
+    &:focus
+        background: lighten($dark_green, 4%)
+        color: white
+        outline: none
+
 .search-view
+    background: $almost_white
+    padding-top: 40px
     position: absolute
-    bottom: 20%
+    bottom: 40px
     text-align: center
     width: 100%
     z-index: -1
@@ -8,13 +23,37 @@
         z-index: 0
 
 .search-button
-    background: $teal
-    border: 1px solid white
+    @include x-large-button
+
+#submit-user
+    @include x-large-button
+
+#username
+    padding: 10px
+    font-size: 18px
     +border-radius(5px)
-    color: white
-    font-size: 32px
-    font-weight: 100
-    padding: 10px 20px
-    &:focus
-        background: lighten($teal, 10%)
+    border: 1px solid grey
+    width: 82%
+    margin-bottom: 10px
+    -webkit-appearance: none
+    &:focus, &:active
         outline: none
+
+#username:focus + .register-info
+    display: none
+
+.register-view
+    position: relative
+
+.register-info
+    position: absolute
+    width: 100%
+    bottom: 220px
+    p
+        font-weight: 300
+        text-align: center
+        margin-bottom: 3em
+
+.input-info
+    color: grey
+
