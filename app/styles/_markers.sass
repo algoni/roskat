@@ -1,12 +1,12 @@
 @mixin circle-marker($color: blue, $radius: 10px)
-    +border-radius($radius)
-    +box-shadow($color 0 0 2px 1px)
-    background: $color
-    width: $radius
-    height: $radius
+  +border-radius($radius)
+  +box-shadow($color 0 0 2px 1px)
+  background: $color
+  width: $radius
+  height: $radius
 
 .user-marker
-    +circle-marker(lighten(blue, 12%))
+  +circle-marker(lighten(blue, 12%))
 
 .trashcan-marker
-    +circle-marker(red)
+  +circle-marker(red)

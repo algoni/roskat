@@ -1,41 +1,41 @@
 .map-view
-    position: absolute
-    top: $menu_height + $status_bar_height
-    bottom: 0
-    left: 0
-    right: 0
-    z-index: -1
-    &.active
-        z-index: 0
+  position: absolute
+  top: $menu_height + $status_bar_height
+  bottom: 0
+  left: 0
+  right: 0
+  z-index: -1
+  &.active
+    z-index: 0
 
 .map-canvas
-    width: 100%
-    position: absolute
-    top: 0
-    bottom: $footer_height
+  width: 100%
+  position: absolute
+  top: 0
+  bottom: $footer_height
 
 .map-controls
 
-    .lower-container
-        position: absolute
-        bottom: 0
-        text-align: center
-        width: 100%
-        height: $footer_height
+  .lower-container
+    position: absolute
+    bottom: 0
+    text-align: center
+    width: 100%
+    height: $footer_height
 
-        #distance
-            font-size: 20px
-            line-height: $footer_height
+    #distance
+      font-size: 20px
+      line-height: $footer_height
 
-        .trashcan-found
-            color: darken($dark_green, 10%)
-            font-size: 32px
-            line-height: $footer_height
-            background: none
-            border: none
-            width: 100%
-            padding: 0
-            margin: 0
+    .trashcan-found
+      color: darken($dark_green, 10%)
+      font-size: 32px
+      line-height: $footer_height
+      background: none
+      border: none
+      width: 100%
+      padding: 0
+      margin: 0
 
-            &:active
-                color: $light_green
+      &:active
+        color: $light_green
