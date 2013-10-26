@@ -4,17 +4,26 @@
 </div>
 
 <div class="main-menu">
-    <ul id="main-menu">
+    <div class="list-heading">Käyttäjä</div>
+    <ul class="current-user">
         {{#with currentUser}}
-            <li>{{name}}</li>
-            <li>{{points}}</li>
+            <li class="name">{{name}}</li>
+            <li class="points">{{points}} pistettä</li>
         {{/with}}
     </ul>
+    <div class="list-heading">5 parasta käyttäjää</div>
     <ol class="top-players">
     {{#each topUsers}}
         <li class="player">
             <span class="name">{{name}}</span>
-            <span class="points">{{points}}</span>
+            <span class="points">
+                {{#if points}}
+                    {{points}}
+                {{else}}
+                    0
+                {{/if}}
+                pistettä
+            </span>
         </li>
     {{/each}}
     </ol>

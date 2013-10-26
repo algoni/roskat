@@ -37,6 +37,7 @@ define([
             this.context.currentUser = this.context.currentUser || {
                 name: 'Ei kirjautunut'
             };
+            console.log(this.collection.toJSON());
             this.el.innerHTML = this.template({
                 currentUser: this.model.toJSON(),
                 topUsers: this.collection.toJSON()

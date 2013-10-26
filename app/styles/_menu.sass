@@ -30,12 +30,14 @@ body
     float: right
 
   .main-menu
+    $menu_padding: 20px
+
     +box-sizing(border-box)
     background: $dark_brown
     color: $almost_white
     list-style: none
     margin: 0
-    padding: 25px
+    padding: 0
     position: absolute
     top: $status_bar_height
     bottom: 0
@@ -45,6 +47,39 @@ body
     .menu-active &
       display: block
 
-    li
-      padding-bottom: 5px
+    .list-heading
+      background: darken($dark_brown, 5%)
+      padding: 10px 8px
 
+    .current-user
+      list-style: none
+      margin: 0
+      padding: 10px 12px
+      .name
+        font-size: 20px
+
+    .points
+      display: block
+      font-size: 12px
+      opacity: 0.6
+
+    .top-players
+      padding: 0 $menu_padding
+      list-style: none
+
+      li
+        counter-increment: player-count
+        margin-bottom: 0.5em
+        padding-left: 20px
+        position: relative
+        &:before
+          content: counter(player-count)
+          position: absolute
+          left: -10px
+          top: -6px
+          font-weight: bold
+          font-size: 38px
+          opacity: 0.2
+
+      .points
+        opacity: 0.6
