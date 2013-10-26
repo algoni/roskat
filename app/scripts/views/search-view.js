@@ -18,21 +18,21 @@ define([
         },
 
         initialize: function() {
-            window.App.userModel.on('change', this.render, this);
+            App.userModel.on('change', this.render, this);
         },
 
         beginSearch: function() {
-            window.App.Vent.trigger('navigation:showMapView');
+            App.Vent.trigger('navigation:showMapView');
         },
 
         render: function() {
-            console.log(window.App.userModel.toJSON());
-            if(window.App.userModel.get('loggedIn') === false) {
+            console.log(App.userModel.toJSON());
+            if(App.userModel.get('loggedIn') === false) {
                 this.$el.html(new RegisterView().render().el);
             }
             else {
                 this.$el.html(this.template({
-                    loggedIn: window.App.userModel.get('loggedIn')
+                    loggedIn: App.userModel.get('loggedIn')
                 }));
             }
             return this;

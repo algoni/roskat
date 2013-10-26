@@ -20,13 +20,13 @@ define([
 
         initialize: function() {
             this.collection.fetch();
-            window.App.Vent.on('quest:completionRegistered', this.render, this);
+            App.Vent.on('quest:completionRegistered', this.render, this);
             this.model.on('change', this.render, this);
             this.collection.on('sync', this.render, this);
         },
 
         showMainView: function() {
-            window.App.Vent.trigger('navigation:showMainView');
+            App.Vent.trigger('navigation:showMainView');
         },
 
         toggleMenu: function() {

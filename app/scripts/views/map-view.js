@@ -23,7 +23,7 @@ define([
                 disableDefaultUI: true,
                 center: [0,0]
             };
-            window.App.Vent.on('locationCheckRequested', this.checkDistanceToTarget, this);
+            App.Vent.on('locationCheckRequested', this.checkDistanceToTarget, this);
         },
 
         checkDistanceToTarget: function() {
@@ -34,14 +34,14 @@ define([
             var closestLatLng = new L.LatLng(this.closestTrashcan.model.get('position').lat, this.closestTrashcan.model.get('position').lng);
             var distance = this.userPosition.distanceTo(closestLatLng); // Etäisyys lähimpään roskakoriin metreinä
             if(distance <= Config.correctAnswerDistance) {
-                window.App.Vent.trigger('user:targetFound', {
+                App.Vent.trigger('user:targetFound', {
                     found: true,
                     distance: this.userStartingPosition.distanceTo(closestLatLng)
                 });
             }
             else {
                 distance = Math.ceil(distance);
-                window.App.Vent.trigger('user:targetTooFar', {distance: distance});
+                App.Vent.trigger('user:targetTooFar', {distance: distance});
             }
         },
 
@@ -109,7 +109,7 @@ define([
         updateApplicationState: function(event) {
             this.userPosition = event.latlng;
             this.drawUser(this.userPosition);
-            window.App.Vent.trigger('locationCheckRequested');
+            App.Vent.trigger('locationCheckRequested');
         },
 
         drawMapCanvas: function() {

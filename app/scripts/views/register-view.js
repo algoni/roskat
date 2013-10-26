@@ -24,16 +24,16 @@ define([
                     method: 'post',
                     url: 'http://roskat-backend.herokuapp.com/user/register',
                     data: {
-                        msg: btoa(this.username + ':' + window.App.user.id)
+                        msg: btoa(this.username + ':' + App.user.id)
                     },
                     success: function() {
-                        window.App.Vent.trigger('user:loggedIn', { name: this.username });
-                        window.App.userModel.set({
+                        App.Vent.trigger('user:loggedIn', { name: this.username });
+                        App.userModel.set({
                             name: this.username,
-                            id: window.App.user.id,
+                            id: App.user.id,
                             loggedIn: true
                         });
-                        window.App.Vent.trigger('userRegistered');
+                        App.Vent.trigger('userRegistered');
                     }.bind(this)
                 });
             }

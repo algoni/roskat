@@ -5,6 +5,8 @@
     {{#if found}}
         <button class="trashcan-found" id="trashcan-found">Valmis!</button>
     {{else}}
-        <div id="distance">Etäisyys kohteeseen: {{distance}} metriä</div>
+        {{#if distance}}
+            <div id="distance">Lähin roskakori: {{distance}} metriä</div>
+        {{/if}}
     {{/if}}
 </div>

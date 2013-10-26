@@ -147,14 +147,14 @@ require([
     };
 
     function onDeviceReady() {
-        window.App.user = {
+        App.user = {
             id: md5(device.uuid)
         };
         new AppView();
     }
 
     function browserInit() {
-        window.App.user = {
+        App.user = {
             id: md5('roskasalaatti')
         };
         new AppView();

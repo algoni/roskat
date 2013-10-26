@@ -18,8 +18,8 @@ define([
         },
 
         initialize: function() {
-            window.App.Vent.on('user:targetTooFar', this.render, this);
-            window.App.Vent.on('user:targetFound', this.render, this);
+            App.Vent.on('user:targetTooFar', this.render, this);
+            App.Vent.on('user:targetFound', this.render, this);
         },
 
         completeQuest: function() {
@@ -29,10 +29,10 @@ define([
                 method: 'post',
                 url: 'http://roskat-backend.herokuapp.com/quest/complete',
                 data: {
-                    msg: btoa(window.App.user.id + ':' + distance + ':' + isHardmode)
+                    msg: btoa(App.user.id + ':' + distance + ':' + isHardmode)
                 },
                 success: function() {
-                    window.App.Vent.trigger('quest:completionRegistered');
+                    App.Vent.trigger('quest:completionRegistered');
                 }
             });
         },
