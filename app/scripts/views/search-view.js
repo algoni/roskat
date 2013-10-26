@@ -28,10 +28,10 @@ define([
         render: function() {
             console.log(window.App.userModel.toJSON());
             if(window.App.userModel.get('loggedIn') === false) {
-                this.$el.prepend(new RegisterView().render().el);
+                this.$el.html(new RegisterView().render().el);
             }
             else {
-                this.$el.append(this.template({
+                this.$el.html(this.template({
                     loggedIn: window.App.userModel.get('loggedIn')
                 }));
             }

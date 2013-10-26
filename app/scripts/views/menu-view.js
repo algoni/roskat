@@ -34,7 +34,6 @@ define([
         },
 
         render: function() {
-            console.log(this.model.toJSON());
             this.context.currentUser = this.context.currentUser || {
                 name: 'Ei kirjautunut'
             };

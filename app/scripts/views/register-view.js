@@ -1,8 +1,9 @@
 /*global define*/
 define([
     'backbone',
+    'models/user',
     'hbs!tmpl/register'
-], function(Backbone, Template) {
+], function(Backbone, User, Template) {
 
     'use strict';
 
@@ -17,16 +18,22 @@ define([
         },
 
         submitUser: function() {
-            var username = $('#username').val();
-            if( username.indexOf(':') === -1 ) {
+            this.username = $('#username').val();
+            if( this.username.indexOf(':') === -1 ) {
                 $.ajax({
                     method: 'post',
                     url: 'http://roskat-backend.herokuapp.com/user/register',
                     data: {
-                        msg: btoa(username + ':' + window.App.user.id)
+                        msg: btoa(this.username + ':' + window.App.user.id)
                     },
                     success: function() {
-                        window.App.Vent.trigger('user:loggedIn', { name: username });
+                        window.App.Vent.trigger('user:loggedIn', { name: this.username });
+                        window.App.userModel.set({
+                            name: this.username,
+                            id: window.App.user.id,
+                            loggedIn: true
+                        });
+                        window.App.Vent.trigger('userRegistered');
                     }.bind(this)
                 });
             }

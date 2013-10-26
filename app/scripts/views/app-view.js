@@ -27,25 +27,28 @@ define([
 
             $.get('http://roskat-backend.herokuapp.com/user/check?id=' + window.App.user.id, function(res) {
                 if( res.length === 0 ) {
-
+                    this.render();
                 }
                 else {
+                    window.App.userModel.set({
+                        name: res[0].name,
+                        id: window.App.user.id
+                    });
                     $.get('http://roskat-backend.herokuapp.com/score/personal?user=' + res[0].name, function(res) {
                         if( res[0] ) {
                             window.App.userModel.set({
-                                'name': res[0].name,
-                                'id': window.App.user.id,
-                                'points': res[0].points,
-                                'loggedIn': true
+                                points: res[0].points,
                             });
                         }
-                        window.App.Vent.trigger('user:loggedIn');
+                        window.App.userModel.set('loggedIn', true);
+                        this.render();
                     }.bind(this));
                 }
             }.bind(this));
         },
 
         render: function() {
+            console.log('Render!');
             this.searchView = new SearchView();
             this.mapView = new MapView();
             this.el.appendChild(new MenuView({
