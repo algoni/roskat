@@ -31,8 +31,8 @@ define([
                 data: {
                     msg: btoa(App.user.id + ':' + distance + ':' + isHardmode)
                 },
-                success: function() {
-                    App.Vent.trigger('quest:completionRegistered');
+                success: function(res) {
+                    App.Vent.trigger('quest:completionRegistered', res);
                 }
             });
         },

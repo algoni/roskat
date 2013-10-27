@@ -7,8 +7,9 @@ define([
     'views/menu-view',
     'views/search-view',
     'views/register-view',
+    'views/completion-view',
     'collections/users-collection'
-], function(Backbone, Config, User, MapView, MenuView, SearchView, RegisterView, UsersCollection) {
+], function(Backbone, Config, User, MapView, MenuView, SearchView, RegisterView, CompletionView, UsersCollection) {
 
     'use strict';
 
@@ -19,6 +20,7 @@ define([
         initialize: function() {
             App.Vent.on('navigation:showMapView', this.showMapView, this);
             App.Vent.on('navigation:showMainView', this.showSearchView, this);
+            App.Vent.on('quest:completionRegistered', this.showCompletionView, this);
             App.userModel = new User({
                 name: 'Ei kirjauduttu',
                 points: 0,
@@ -59,6 +61,12 @@ define([
             this.mapView.drawMapCanvas();
             this.showSearchView();
             return this;
+        },
+
+        showCompletionView: function(quest) {
+            this.searchView.$el.removeClass('active');
+            this.mapView.$el.removeClass('active');
+            this.el.appendChild(new CompletionView({quest: quest}).render().el);
         },
 
         showSearchView: function() {
