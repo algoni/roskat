@@ -12,6 +12,7 @@ body
     right: $menu_width
 
 .main-navigation
+  padding-top: $status_bar_height
 
   .navbar
     background: lighten($light_green, 10%)
@@ -31,6 +32,10 @@ body
 
   .main-menu
     $menu_padding: 20px
+    .padding
+      width: 100%
+      height: $status_bar_height
+      background: $almost_white
 
     +box-sizing(border-box)
     background: $dark_brown
@@ -39,7 +44,7 @@ body
     margin: 0
     padding: 0
     position: absolute
-    top: $status_bar_height
+    top: 0
     bottom: 0
     right: -$menu_width
     width: $menu_width
@@ -70,15 +75,17 @@ body
       li
         counter-increment: player-count
         margin-bottom: 0.5em
-        padding-left: 20px
+        padding-left: 15px
         position: relative
+        font-size: 14px
+        font-weight: 400
         &:before
           content: counter(player-count)
           position: absolute
-          left: -10px
-          top: -6px
+          left: -12px
+          top: -7px
           font-weight: bold
-          font-size: 38px
+          font-size: 35px
           opacity: 0.2
 
       .points
