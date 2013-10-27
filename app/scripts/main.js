@@ -154,13 +154,34 @@ require([
     }
 
     function browserInit() {
-        App.user = {
-            id: md5('roskasalaatti')
-        };
+        if( localStorage.getItem('devid') ) {
+            // Käyttäjä on rekisteröitynyt laitteella aiemmin
+            App.user = {
+                id: localStorage.getItem('devid')
+            };
+        }
+        else {
+            // Uusi käyttäjä, selainympäristö: tallennetaan keksitty id localStorageen
+            localStorage.setItem('devid', md5(Date.now()));
+            App.user = {
+                id: md5(Date.now())
+            };
+        }
+        App.browser = true;
+
+        if( ("standalone" in window.navigator) && window.navigator.standalone ){
+            // Selain ei ole fullscreen-modessa
+            $('body').addClass('fullscreen');
+        }
+        else {
+            $('body').addClass('no-fullscreen');
+        }
+
+        $('body').addClass('browser-mode');
         new AppView();
     }
 
-    if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+    if (typeof device !== 'undefined') {
         document.addEventListener('deviceready', onDeviceReady, false);
     } else {
         browserInit();

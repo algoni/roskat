@@ -1,13 +1,20 @@
 .search-view
   background: $almost_white
-  padding-top: 40px
   position: absolute
-  bottom: 40px
+  top: $status_bar_height + $menu_height
+  bottom: 0
+  left: 0
+  right: 0
   text-align: center
   width: 100%
   z-index: -1
   &.active
     z-index: 0
+
+.search-button-container
+  position: absolute
+  bottom: 0
+  width: 100%
 
 .search-button
   @include x-large-button
@@ -21,7 +28,9 @@
   +border-radius(5px)
   border: 1px solid grey
   width: 82%
-  margin-bottom: 10px
+  max-width: 320px
+  display: block
+  margin: 0 auto 10px
   -webkit-appearance: none
   &:focus, &:active
     outline: none
@@ -29,13 +38,18 @@
 #username:focus + .register-info
   display: none
 
-.register-view
-  position: relative
+.register-view, .search-container
+  background: $almost_white
+  position: absolute
+  padding-top: 50px
+  bottom: 30px
+  top: 0
+  width: 100%
 
 .register-info
   position: absolute
   width: 100%
-  bottom: 220px
+  top: 10%
   .first-line
     font-size: 30px
     display: block
@@ -43,6 +57,16 @@
     font-weight: 300
     text-align: center
     margin-bottom: 3em
+
+  @media screen and (orientation : landscape)
+    display: none
+
+.register-form
+  background: $almost_white
+  position: absolute
+  padding-top: 40px
+  width: 100%
+  bottom: 0
 
 .input-info
   color: grey
