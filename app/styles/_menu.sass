@@ -12,7 +12,6 @@ body
     right: $menu_width
 
 .main-navigation
-  padding-top: $status_bar_height
 
   .navbar
     background: lighten($light_green, 10%)
@@ -31,10 +30,6 @@ body
 
   .main-menu
     $menu_padding: 20px
-    .padding
-      width: 100%
-      height: $status_bar_height
-      background: $almost_white
 
     +box-sizing(border-box)
     background: $dark_brown
@@ -89,3 +84,10 @@ body
 
       .points
         opacity: 0.6
+
+.copyright
+  font-size: 9px
+  width: 100%
+  padding: 0 10px
+  position: absolute
+  bottom: 4px
