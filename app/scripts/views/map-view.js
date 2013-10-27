@@ -79,7 +79,7 @@ define([
             else {
                 this.userMarker =  new L.Marker(position, {
                     icon: new L.divIcon({
-                        className: 'user-marker',
+                        className: 'user-marker glyphicon glyphicon-user',
                         iconAnchor: new L.Point(5,5) // marker-elementin keskikohta koordinaatteina
                     })
                 }).addTo(window.map);
