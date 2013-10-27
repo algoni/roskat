@@ -1,0 +1,91 @@
+//------------------------------------------------------------------------------
+// Siirretään päänäkymä sivuun kun valikko on aktiivinen
+//------------------------------------------------------------------------------
+
+$menu_width: 200px
+
+body
+  position: absolute
+  +transition-property(right)
+  +transition-duration(0.5s)
+  &.menu-active
+    right: $menu_width
+
+.main-navigation
+  padding-top: $status_bar_height
+
+  .navbar
+    background: lighten($light_green, 10%)
+    border-bottom: 1px solid desaturate(lighten($dark_green, 20%), 60%)
+    font-weight: bold
+    font-size: 1.2em
+    height: $menu_height
+
+  .back-icon
+    +menu-icon
+    float: left
+
+  .menu-icon
+    +menu-icon
+    float: right
+
+  .main-menu
+    $menu_padding: 20px
+    .padding
+      width: 100%
+      height: $status_bar_height
+      background: $almost_white
+
+    +box-sizing(border-box)
+    background: $dark_brown
+    color: $almost_white
+    list-style: none
+    margin: 0
+    padding: 0
+    position: absolute
+    top: 0
+    bottom: 0
+    right: -$menu_width
+    width: $menu_width
+    display: none
+    .menu-active &
+      display: block
+
+    .list-heading
+      background: darken($dark_brown, 5%)
+      padding: 10px 8px
+
+    .current-user
+      list-style: none
+      margin: 0
+      padding: 10px 12px
+      .name
+        font-size: 20px
+
+    .points
+      display: block
+      font-size: 12px
+      opacity: 0.6
+
+    .top-players
+      padding: 0 $menu_padding
+      list-style: none
+
+      li
+        counter-increment: player-count
+        margin-bottom: 0.5em
+        padding-left: 15px
+        position: relative
+        font-size: 14px
+        font-weight: 400
+        &:before
+          content: counter(player-count)
+          position: absolute
+          left: -12px
+          top: -7px
+          font-weight: bold
+          font-size: 35px
+          opacity: 0.2
+
+      .points
+        opacity: 0.6

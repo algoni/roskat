@@ -1,0 +1,31 @@
+<div class="navbar">
+    <div id="back-icon" class="back-icon">←</div>
+    <div id="menu-icon" class="menu-icon">☰</div>
+</div>
+
+<div class="main-menu">
+    <div class="padding"></div>
+    <div class="list-heading">Käyttäjä</div>
+    <ul class="current-user">
+        {{#with currentUser}}
+            <li class="name">{{name}}</li>
+            <li class="points">{{points}} pistettä</li>
+        {{/with}}
+    </ul>
+    <div class="list-heading">5 parasta käyttäjää</div>
+    <ol class="top-players">
+    {{#each topUsers}}
+        <li class="player">
+            <span class="name">{{name}}</span>
+            <span class="points">
+                {{#if points}}
+                    {{points}}
+                {{else}}
+                    0
+                {{/if}}
+                pistettä
+            </span>
+        </li>
+    {{/each}}
+    </ol>
+</div>

@@ -1,0 +1,12 @@
+<div class="upper-container">
+
+</div>
+<div class="lower-container">
+    {{#if found}}
+        <button class="trashcan-found" id="trashcan-found">Valmis!</button>
+    {{else}}
+        {{#if distance}}
+            <div id="distance">Lähin roskakori: {{distance}} metriä</div>
+        {{/if}}
+    {{/if}}
+</div>
