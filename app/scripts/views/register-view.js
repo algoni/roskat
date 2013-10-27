@@ -1,34 +1,46 @@
 /*global define*/
-define(['backbone'], function(Backbone) {
+define([
+    'backbone',
+    'models/user',
+    'hbs!tmpl/register'
+], function(Backbone, User, Template) {
 
     'use strict';
 
     return Backbone.View.extend({
+
+        template: Template,
+        id: 'register-view',
+        className: 'register-view',
 
         events: {
             'click #submit-user': 'submitUser'
         },
 
         submitUser: function() {
-            var username = $('#username').val();
-            if( username.indexOf(':') === -1 ) {
+            this.username = $('#username').val();
+            if( this.username.indexOf(':') === -1 ) {
                 $.ajax({
                     method: 'post',
                     url: 'http://roskat-backend.herokuapp.com/user/register',
                     data: {
-                        msg: btoa(username + ':' + window.App.user.id)
+                        msg: btoa(this.username + ':' + App.user.id)
                     },
                     success: function() {
-                        console.log(this);
-                        window.App.Vent.trigger('user:loggedIn', { name: username });
-                        this.remove();
+                        App.Vent.trigger('user:loggedIn', { name: this.username });
+                        App.userModel.set({
+                            name: this.username,
+                            id: App.user.id,
+                            loggedIn: true
+                        });
+                        App.Vent.trigger('userRegistered');
                     }.bind(this)
                 });
             }
         },
 
         render: function() {
-            this.el.innerHTML = '<input type="text" id="username" placeholder="Käyttäjänimesi"><button id="submit-user">OK</button>';
+            this.el.innerHTML = this.template();
             return this;
         }
     });

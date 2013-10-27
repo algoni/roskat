@@ -7,7 +7,8 @@ define(['backbone'], function(Backbone) {
         defaults: {
             name: '',
             id: '',
-            points: 0
+            points: 0,
+            loggedIn: false
         }
     });
 

@@ -1,9 +1,8 @@
 /*global define*/
 define([
     'backbone',
-    'hbs!tmpl/main-menu',
-    'collections/users-collection'
-], function(Backbone, Template, Users) {
+    'hbs!tmpl/main-menu'
+], function(Backbone, Template) {
 
     'use strict';
 
@@ -21,13 +20,13 @@ define([
 
         initialize: function() {
             this.collection.fetch();
-            window.App.Vent.on('quest:completionRegistered', this.render, this);
+            App.Vent.on('quest:completionRegistered', this.render, this);
             this.model.on('change', this.render, this);
             this.collection.on('sync', this.render, this);
         },
 
         showMainView: function() {
-            window.App.Vent.trigger('navigation:showMainView');
+            App.Vent.trigger('navigation:showMainView');
         },
 
         toggleMenu: function() {
@@ -35,10 +34,10 @@ define([
         },
 
         render: function() {
-            console.log(this.model.toJSON());
             this.context.currentUser = this.context.currentUser || {
                 name: 'Ei kirjautunut'
             };
+            console.log(this.collection.toJSON());
             this.el.innerHTML = this.template({
                 currentUser: this.model.toJSON(),
                 topUsers: this.collection.toJSON()

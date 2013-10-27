@@ -147,17 +147,17 @@ require([
     };
 
     function onDeviceReady() {
-        window.App.user = {
+        App.user = {
             id: md5(device.uuid)
         };
-        new AppView().render();
+        new AppView();
     }
 
     function browserInit() {
-        window.App.user = {
+        App.user = {
             id: md5('roskasalaatti')
         };
-        new AppView().render();
+        new AppView();
     }
 
     if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {

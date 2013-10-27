@@ -1,8 +1,9 @@
 /*global define*/
 define([
     'backbone',
+    'views/register-view',
     'hbs!tmpl/search-view'
-], function(Backbone, Template) {
+], function(Backbone, RegisterView, Template) {
 
     'use strict';
 
@@ -16,12 +17,24 @@ define([
             'click #search-button': 'beginSearch'
         },
 
+        initialize: function() {
+            App.userModel.on('change', this.render, this);
+        },
+
         beginSearch: function() {
-            window.App.Vent.trigger('navigation:showMapView');
+            App.Vent.trigger('navigation:showMapView');
         },
 
         render: function() {
-            this.el.innerHTML = this.template();
+            console.log(App.userModel.toJSON());
+            if(App.userModel.get('loggedIn') === false) {
+                this.$el.html(new RegisterView().render().el);
+            }
+            else {
+                this.$el.html(this.template({
+                    loggedIn: App.userModel.get('loggedIn')
+                }));
+            }
             return this;
         }
 

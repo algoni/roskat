@@ -1,53 +1,29 @@
-$icon-font-path: "/bower_components/sass-bootstrap/fonts/"
+$icon-font-path: "../bower_components/sass-bootstrap/fonts/"
 
 @import 'variables'
 @import 'compass'
-@import 'leaflet'
-@import 'markers'
-@import 'menu'
-@import 'search'
-@import 'map'
+@import 'sass-bootstrap/lib/variables'
+@import 'sass-bootstrap/lib/glyphicons'
 
 *
-    +box-sizing(border-box)
-    font-family: 'Helvetica Neue', sans-serif
-    font-weight: 200
+  +box-sizing(border-box)
+  font-family: 'Helvetica Neue', sans-serif
 
 html, body
-    margin: 0
-    width: 100%
-    height: 100%
+  margin: 0
+  font-weight: 200
+  width: 100%
+  height: 100%
 
 html
-    background: $teal
+  background: $dark_brown
 
 body
-    background: white
-    padding-top: $status_bar_height
+  background: $almost_white
+  padding-top: 0
 
-#compass-view
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-
-.compass-needle
-    font:
-        size: 140px
-        weight: bold
-    color: #bada55
-    line-height: 1em
-    height: 150px
-    width: 150px
-    display: inline-block
-    text-align: center
-
-    position: absolute
-    top: 50%
-    left: 50%
-    margin-top: -75px
-    margin-left: -75px
-
-    +transform-origin(50%, 50%)
-    +translateZ(0)
+@import 'leaflet'
+@import 'markers'
+@import 'search'
+@import 'map'
+@import 'menu'

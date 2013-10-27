@@ -17,33 +17,34 @@ define([
         el: 'body',
 
         initialize: function() {
-            window.App.Vent.on('navigation:showMapView', this.showMapView, this);
-            window.App.Vent.on('navigation:showMainView', this.showSearchView, this);
-            window.App.userModel = new User({
+            App.Vent.on('navigation:showMapView', this.showMapView, this);
+            App.Vent.on('navigation:showMainView', this.showSearchView, this);
+            App.userModel = new User({
                 name: 'Ei kirjauduttu',
                 points: 0,
-                id: window.App.user.id
+                id: App.user.id
             });
 
-            $.get('http://roskat-backend.herokuapp.com/user/check?id=' + window.App.user.id, function(res) {
+            $.get('http://roskat-backend.herokuapp.com/user/check?id=' + App.user.id, function(res) {
                 if( res.length === 0 ) {
-                    this.showRegisterForm();
+                    this.render();
                 }
                 else {
-                    window.App.userModel.set('name', res[0].name);
-                    window.App.userModel.set('id', window.App.user.id);
+                    App.userModel.set({
+                        name: res[0].name,
+                        id: App.user.id
+                    });
                     $.get('http://roskat-backend.herokuapp.com/score/personal?user=' + res[0].name, function(res) {
                         if( res[0] ) {
-                            window.App.userModel.set('points', res[0].points);
+                            App.userModel.set({
+                                points: res[0].points,
+                            });
                         }
-                        window.App.Vent.trigger('user:loggedIn');
+                        App.userModel.set('loggedIn', true);
+                        this.render();
                     }.bind(this));
                 }
             }.bind(this));
-        },
-
-        showRegisterForm: function() {
-            this.$el.append(new RegisterView().render().el);
         },
 
         render: function() {
@@ -51,7 +52,7 @@ define([
             this.mapView = new MapView();
             this.el.appendChild(new MenuView({
                 collection: new UsersCollection(),
-                model: window.App.userModel
+                model: App.userModel
             }).render().el);
             this.el.appendChild(this.searchView.render().el);
             this.el.appendChild(this.mapView.render().el);
